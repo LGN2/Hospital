@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Entity
 @Table(name = "doctors")
 @Getter
@@ -27,4 +29,7 @@ public class Doctor extends BaseClass{
     @ManyToOne
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
+
+    @OneToMany(mappedBy = "doctor")
+    private List<Appointment> appointments = new ArrayList<>();
 }
