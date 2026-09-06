@@ -30,4 +30,14 @@ public class HospitalService {
     public List<Hospital> getAllHospitals() {
         return hospitalRepository.findByIsActiveTrue();
     }
+    //Get By ID
+    public Hospital getHospitalById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Hospital ID cannot be null");
+        }
+        return hospitalRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Hospital not found with ID: " + id));
+    }
 }
