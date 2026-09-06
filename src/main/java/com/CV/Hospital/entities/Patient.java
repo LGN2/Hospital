@@ -16,4 +16,7 @@ public class Patient extends BaseClass{
 
     @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(nullable = false, length = 20)
+    private String gender;
 }
