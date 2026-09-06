@@ -78,4 +78,10 @@ public class DoctorService {
         }
         return doctorRepository.save(doctor);
     }
+
+    public void deleteDoctor(Long id) {
+        Doctor doctor = getDoctorById(id);
+        doctor.setIsActive(false);
+        doctorRepository.save(doctor);
+    }
 }
