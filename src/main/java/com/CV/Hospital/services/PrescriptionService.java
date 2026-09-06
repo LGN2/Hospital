@@ -32,4 +32,10 @@ public class PrescriptionService {
     public List<Prescription> getAllPrescriptions() {
         return prescriptionRepository.findByIsActiveTrue();
     }
+
+    public Prescription getPrescriptionById(Long id) {
+        return prescriptionRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Prescription not found"));
+    }
 }
