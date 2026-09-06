@@ -40,4 +40,21 @@ public class PatientService {
         return patientRepository
                 .findByHospitalIdAndIsActiveTrue(hospitalId);
     }
+
+    public Patient updatePatient(Long id, Patient updatedPatient) {
+        Patient patient = getPatientById(id);
+        if (updatedPatient.getName() != null) {
+            patient.setName(updatedPatient.getName());
+        }
+        if (updatedPatient.getGender() != null) {
+            patient.setGender(updatedPatient.getGender());
+        }
+        if (updatedPatient.getPhoneNumber() != null) {
+            patient.setPhoneNumber(updatedPatient.getPhoneNumber());
+        }
+        if (updatedPatient.getBloodGroup() != null) {
+            patient.setBloodGroup(updatedPatient.getBloodGroup());
+        }
+        return patientRepository.save(patient);
+    }
 }
