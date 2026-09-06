@@ -18,4 +18,7 @@ public class Appointment extends BaseClass{
 
     @Column(nullable = false)
     private LocalDateTime appointmentDate;
+
+    @Column(nullable = false, length = 500)
+    private String reason;
 }
