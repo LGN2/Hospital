@@ -44,4 +44,24 @@ public class PrescriptionService {
         return prescriptionRepository
                 .findByMedicalRecordIdAndIsActiveTrue(medicalRecordId);
     }
+
+    public Prescription updatePrescription(
+            Long id,
+            Prescription updatedPrescription) {
+        Prescription prescription = getPrescriptionById(id);
+        if (updatedPrescription.getMedicineName() != null) {
+            prescription.setMedicineName(
+                    updatedPrescription.getMedicineName()
+            );
+        }
+        if (updatedPrescription.getDosage() != null) {
+            prescription.setDosage(updatedPrescription.getDosage());
+        }
+        if (updatedPrescription.getDurationDays() != null) {
+            prescription.setDurationDays(
+                    updatedPrescription.getDurationDays()
+            );
+        }
+        return prescriptionRepository.save(prescription);
+    }
 }
