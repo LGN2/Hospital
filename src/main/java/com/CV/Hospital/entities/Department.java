@@ -1,4 +1,16 @@
 package com.CV.Hospital.entities;
 
-public class Department {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "departments")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Department extends BaseClass{
+
 }
