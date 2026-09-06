@@ -45,4 +45,27 @@ public class RoomService {
         return roomRepository.findByHospitalIdAndIsActiveTrue(hospitalId);
     }
 
+    public Room updateRoom(Long id, Room updatedRoom) {
+        Room room = getRoomById(id);
+        if (updatedRoom.getRoomNumber() != null) {
+            room.setRoomNumber(updatedRoom.getRoomNumber());
+        }
+        if (updatedRoom.getFloor() != null) {
+            room.setFloor(updatedRoom.getFloor());
+        }
+        if (updatedRoom.getType() != null) {
+            room.setType(updatedRoom.getType());
+        }
+        if (updatedRoom.getCapacity() != null) {
+            if (updatedRoom.getCapacity() <= 0) {
+                throw new IllegalArgumentException(
+                        "Room capacity must be greater than zero"
+                );
+            }
+            room.setCapacity(updatedRoom.getCapacity());
+        }
+        return roomRepository.save(room);
+    }
+
+
 }
