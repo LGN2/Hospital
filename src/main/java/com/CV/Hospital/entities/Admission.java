@@ -1,4 +1,15 @@
 package com.CV.Hospital.entities;
 
-public class Admission {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "admissions")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Admission extends BaseClass{
 }
