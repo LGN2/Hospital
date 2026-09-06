@@ -41,4 +41,18 @@ public class DepartmentService {
     public List<Department> getDepartmentsByHospital(Long hospitalId) {
         return departmentRepository.findByHospitalIdAndIsActiveTrue(hospitalId);
     }
+
+    public Department updateDepartment(
+            Long id,
+            Department updatedDepartment) {
+        Department department = getDepartmentById(id);
+        if (updatedDepartment.getName() != null &&
+                !updatedDepartment.getName().isBlank()) {
+            department.setName(updatedDepartment.getName());
+        }
+        if (updatedDepartment.getDescription() != null) {
+            department.setDescription(updatedDepartment.getDescription());
+        }
+        return departmentRepository.save(department);
+    }
 }
