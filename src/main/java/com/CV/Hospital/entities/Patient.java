@@ -37,4 +37,7 @@ public class Patient extends BaseClass{
 
     @OneToMany(mappedBy = "patient")
     private List<MedicalRecord> medicalRecords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "patient")
+    private List<Guardian> guardians = new ArrayList<>();
 }
