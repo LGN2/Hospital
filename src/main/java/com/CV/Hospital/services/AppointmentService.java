@@ -60,4 +60,22 @@ public class AppointmentService {
     public List<Appointment> getAppointmentsByPatient(Long patientId) {
         return appointmentRepository.findByPatientIdAndIsActiveTrue(patientId);
     }
+
+    public Appointment updateAppointment(
+            Long id,
+            Appointment updatedAppointment) {
+        Appointment appointment = getAppointmentById(id);
+        if (updatedAppointment.getAppointmentDate() != null) {
+            appointment.setAppointmentDate(
+                    updatedAppointment.getAppointmentDate()
+            );
+        }
+        if (updatedAppointment.getReason() != null) {
+            appointment.setReason(updatedAppointment.getReason());
+        }
+        if (updatedAppointment.getStatus() != null) {
+            appointment.setStatus(updatedAppointment.getStatus());
+        }
+        return appointmentRepository.save(appointment);
+    }
 }
