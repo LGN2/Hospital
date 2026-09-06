@@ -29,4 +29,10 @@ public class PatientService {
     public List<Patient> getAllPatients() {
         return patientRepository.findByIsActiveTrue();
     }
+
+    public Patient getPatientById(Long id) {
+        return patientRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found with ID: " + id));
+    }
 }
