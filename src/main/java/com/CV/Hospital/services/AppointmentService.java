@@ -56,4 +56,8 @@ public class AppointmentService {
     public List<Appointment> getAppointmentsByDoctor(Long doctorId) {
         return appointmentRepository.findByDoctorIdAndIsActiveTrue(doctorId);
     }
+
+    public List<Appointment> getAppointmentsByPatient(Long patientId) {
+        return appointmentRepository.findByPatientIdAndIsActiveTrue(patientId);
+    }
 }
