@@ -38,4 +38,9 @@ public class MedicalRecordService {
                 .orElseThrow(() ->
                         new RuntimeException("Medical record not found"));
     }
+
+    public List<MedicalRecord> getMedicalRecordsByPatient(Long patientId) {
+        return medicalRecordRepository
+                .findByPatientIdAndIsActiveTrue(patientId);
+    }
 }
