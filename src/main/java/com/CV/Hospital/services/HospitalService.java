@@ -5,6 +5,8 @@ import com.CV.Hospital.repositories.HospitalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class HospitalService {
@@ -23,5 +25,9 @@ public class HospitalService {
         }
         hospital.setIsActive(true);
         return hospitalRepository.save(hospital);
+    }
+    //Get All
+    public List<Hospital> getAllHospitals() {
+        return hospitalRepository.findByIsActiveTrue();
     }
 }
