@@ -64,4 +64,10 @@ public class PrescriptionService {
         }
         return prescriptionRepository.save(prescription);
     }
+
+    public void deletePrescription(Long id) {
+        Prescription prescription = getPrescriptionById(id);
+        prescription.setIsActive(false);
+        prescriptionRepository.save(prescription);
+    }
 }
