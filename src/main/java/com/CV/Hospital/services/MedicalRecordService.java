@@ -32,4 +32,10 @@ public class MedicalRecordService {
     public List<MedicalRecord> getAllMedicalRecords() {
         return medicalRecordRepository.findByIsActiveTrue();
     }
+
+    public MedicalRecord getMedicalRecordById(Long id) {
+        return medicalRecordRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Medical record not found"));
+    }
 }
