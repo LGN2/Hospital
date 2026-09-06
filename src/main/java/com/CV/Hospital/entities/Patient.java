@@ -25,4 +25,8 @@ public class Patient extends BaseClass{
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private BloodGroupType bloodGroup;
+
+    @ManyToOne
+    @JoinColumn(name = "hospital_id", nullable = false)
+    private Hospital hospital;
 }
