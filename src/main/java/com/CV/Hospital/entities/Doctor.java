@@ -19,4 +19,7 @@ public class Doctor extends BaseClass{
 
     @Column(nullable = false, length = 150, unique = true)
     private String email;
+
+    @Column(nullable = false, length = 20)
+    private String phoneNumber;
 }
