@@ -25,4 +25,8 @@ public class Bill extends BaseClass{
 
     @Column(nullable = false)
     private LocalDate billDate;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
 }
