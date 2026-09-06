@@ -18,4 +18,6 @@ public class Admission extends BaseClass{
 
     @Column(nullable = false)
     private LocalDate admitDate;
+
+    private LocalDate dischargeDate;
 }
