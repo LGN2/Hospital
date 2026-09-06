@@ -1,8 +1,6 @@
 package com.CV.Hospital.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,4 +18,8 @@ public class Admission extends BaseClass{
     private LocalDate admitDate;
 
     private LocalDate dischargeDate;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
 }
