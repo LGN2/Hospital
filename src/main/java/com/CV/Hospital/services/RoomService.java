@@ -41,4 +41,8 @@ public class RoomService {
                         new RuntimeException("Room not found"));
     }
 
+    public List<Room> getRoomsByHospital(Long hospitalId) {
+        return roomRepository.findByHospitalIdAndIsActiveTrue(hospitalId);
+    }
+
 }
