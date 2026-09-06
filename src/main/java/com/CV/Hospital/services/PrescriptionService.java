@@ -38,4 +38,10 @@ public class PrescriptionService {
                 .orElseThrow(() ->
                         new RuntimeException("Prescription not found"));
     }
+
+    public List<Prescription> getPrescriptionsByMedicalRecord(
+            Long medicalRecordId) {
+        return prescriptionRepository
+                .findByMedicalRecordIdAndIsActiveTrue(medicalRecordId);
+    }
 }
