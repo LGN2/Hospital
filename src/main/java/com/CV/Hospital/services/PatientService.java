@@ -35,4 +35,9 @@ public class PatientService {
                 .orElseThrow(() ->
                         new RuntimeException("Patient not found with ID: " + id));
     }
+
+    public List<Patient> getPatientsByHospital(Long hospitalId) {
+        return patientRepository
+                .findByHospitalIdAndIsActiveTrue(hospitalId);
+    }
 }
