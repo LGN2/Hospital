@@ -56,4 +56,9 @@ public class DoctorService {
         return doctorRepository
                 .findByDepartmentIdAndIsActiveTrue(departmentId);
     }
+
+    public List<Doctor> getDoctorsByHospital(Long hospitalId) {
+        return doctorRepository
+                .findByHospitalIdAndIsActiveTrue(hospitalId);
+    }
 }
