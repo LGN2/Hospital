@@ -1,8 +1,6 @@
 package com.CV.Hospital.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,4 +23,8 @@ public class Doctor extends BaseClass{
 
     @Column(nullable = false, length = 100)
     private String specialization;
+
+    @ManyToOne
+    @JoinColumn(name = "hospital_id", nullable = false)
+    private Hospital hospital;
 }
