@@ -7,6 +7,8 @@ import com.CV.Hospital.repositories.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RoomService {
@@ -28,4 +30,9 @@ public class RoomService {
         room.setIsActive(true);
         return roomRepository.save(room);
     }
+
+    public List<Room> getAllRooms() {
+        return roomRepository.findByIsActiveTrue();
+    }
+
 }
