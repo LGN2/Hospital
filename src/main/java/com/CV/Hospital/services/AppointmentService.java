@@ -78,4 +78,10 @@ public class AppointmentService {
         }
         return appointmentRepository.save(appointment);
     }
+
+    public void deleteAppointment(Long id) {
+        Appointment appointment = getAppointmentById(id);
+        appointment.setIsActive(false);
+        appointmentRepository.save(appointment);
+    }
 }
