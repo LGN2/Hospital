@@ -67,5 +67,9 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-
+    public void deleteRoom(Long id) {
+        Room room = getRoomById(id);
+        room.setIsActive(false);
+        roomRepository.save(room);
+    }
 }
