@@ -1,4 +1,11 @@
 package com.CV.Hospital.entities;
 
-public class Hospital {
+import jakarta.persistence.Entity;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+public class Hospital extends BaseClass{
 }
