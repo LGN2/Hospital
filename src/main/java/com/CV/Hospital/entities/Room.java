@@ -22,4 +22,7 @@ public class Room extends BaseClass{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private RoomType type;
+
+    @Column(nullable = false)
+    private Integer capacity;
 }
