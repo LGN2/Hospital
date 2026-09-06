@@ -16,4 +16,7 @@ public class Staff extends BaseClass{
 
     @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(nullable = false, length = 50)
+    private String role;
 }
