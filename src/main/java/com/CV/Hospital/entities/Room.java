@@ -25,4 +25,8 @@ public class Room extends BaseClass{
 
     @Column(nullable = false)
     private Integer capacity;
+
+    @ManyToOne
+    @JoinColumn(name = "hospital_id", nullable = false)
+    private Hospital hospital;
 }
