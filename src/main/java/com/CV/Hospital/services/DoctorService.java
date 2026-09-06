@@ -51,4 +51,9 @@ public class DoctorService {
                 .orElseThrow(() ->
                         new RuntimeException("Doctor not found with ID: " + id));
     }
+
+    public List<Doctor> getDoctorsByDepartment(Long departmentId) {
+        return doctorRepository
+                .findByDepartmentIdAndIsActiveTrue(departmentId);
+    }
 }
