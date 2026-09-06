@@ -46,4 +46,10 @@ public class AppointmentService {
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findByIsActiveTrue();
     }
+
+    public Appointment getAppointmentById(Long id) {
+        return appointmentRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Appointment not found"));
+    }
 }
