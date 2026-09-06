@@ -1,8 +1,6 @@
 package com.CV.Hospital.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,4 +20,8 @@ public class Guardian extends BaseClass{
 
     @Column(nullable = false, length = 20)
     private String phoneNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
 }
