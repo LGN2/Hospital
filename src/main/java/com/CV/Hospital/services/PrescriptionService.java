@@ -7,6 +7,8 @@ import com.CV.Hospital.repositories.PrescriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PrescriptionService {
@@ -25,5 +27,9 @@ public class PrescriptionService {
         prescription.setMedicalRecord(medicalRecord);
         prescription.setIsActive(true);
         return prescriptionRepository.save(prescription);
+    }
+
+    public List<Prescription> getAllPrescriptions() {
+        return prescriptionRepository.findByIsActiveTrue();
     }
 }
