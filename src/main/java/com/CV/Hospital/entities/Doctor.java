@@ -28,6 +28,10 @@ public class Doctor extends BaseClass{
     private String specialization;
 
     @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    @ManyToOne
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
 
