@@ -61,4 +61,21 @@ public class DoctorService {
         return doctorRepository
                 .findByHospitalIdAndIsActiveTrue(hospitalId);
     }
+
+    public Doctor updateDoctor(Long id, Doctor updatedDoctor) {
+        Doctor doctor = getDoctorById(id);
+        if (updatedDoctor.getName() != null) {
+            doctor.setName(updatedDoctor.getName());
+        }
+        if (updatedDoctor.getEmail() != null) {
+            doctor.setEmail(updatedDoctor.getEmail());
+        }
+        if (updatedDoctor.getPhoneNumber() != null) {
+            doctor.setPhoneNumber(updatedDoctor.getPhoneNumber());
+        }
+        if (updatedDoctor.getSpecialization() != null) {
+            doctor.setSpecialization(updatedDoctor.getSpecialization());
+        }
+        return doctorRepository.save(doctor);
+    }
 }
