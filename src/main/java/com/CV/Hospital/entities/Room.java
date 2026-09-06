@@ -16,4 +16,7 @@ public class Room extends BaseClass{
 
     @Column(nullable = false, length = 20)
     private String roomNumber;
+
+    @Column(nullable = false)
+    private Integer floor;
 }
