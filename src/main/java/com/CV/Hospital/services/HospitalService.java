@@ -26,10 +26,14 @@ public class HospitalService {
         hospital.setIsActive(true);
         return hospitalRepository.save(hospital);
     }
+
+
     //Get All
     public List<Hospital> getAllHospitals() {
         return hospitalRepository.findByIsActiveTrue();
     }
+
+
     //Get By ID
     public Hospital getHospitalById(Long id) {
         if (id == null) {
@@ -39,5 +43,23 @@ public class HospitalService {
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
                         new RuntimeException("Hospital not found with ID: " + id));
+    }
+
+
+    //Update
+    public Hospital updateHospital(Long id, Hospital updatedHospital) {
+        if (updatedHospital == null) {
+            throw new IllegalArgumentException("Hospital cannot be null");
+        }
+        Hospital existingHospital = getHospitalById(id);
+        if (updatedHospital.getName() != null
+                && !updatedHospital.getName().isBlank()) {
+            existingHospital.setName(updatedHospital.getName());
+        }
+        if (updatedHospital.getLocation() != null
+                && !updatedHospital.getLocation().isBlank()) {
+            existingHospital.setLocation(updatedHospital.getLocation());
+        }
+        return hospitalRepository.save(existingHospital);
     }
 }
