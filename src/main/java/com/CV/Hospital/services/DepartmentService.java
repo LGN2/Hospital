@@ -55,4 +55,10 @@ public class DepartmentService {
         }
         return departmentRepository.save(department);
     }
+
+    public void deleteDepartment(Long id) {
+        Department department = getDepartmentById(id);
+        department.setIsActive(false);
+        departmentRepository.save(department);
+    }
 }
