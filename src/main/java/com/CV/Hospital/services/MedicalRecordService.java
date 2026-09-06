@@ -43,4 +43,21 @@ public class MedicalRecordService {
         return medicalRecordRepository
                 .findByPatientIdAndIsActiveTrue(patientId);
     }
+
+    public MedicalRecord updateMedicalRecord(
+            Long id,
+            MedicalRecord updatedRecord) {
+        MedicalRecord record = getMedicalRecordById(id);
+        if (updatedRecord.getDiagnosis() != null) {
+            record.setDiagnosis(updatedRecord.getDiagnosis());
+        }
+        if (updatedRecord.getNotes() != null) {
+            record.setNotes(updatedRecord.getNotes());
+        }
+        if (updatedRecord.getRecordDate() != null) {
+            record.setRecordDate(updatedRecord.getRecordDate());
+        }
+        return medicalRecordRepository.save(record);
+    }
+
 }
