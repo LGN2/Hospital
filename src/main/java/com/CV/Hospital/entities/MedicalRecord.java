@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "medical_records")
@@ -26,4 +27,7 @@ public class MedicalRecord extends BaseClass{
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
+
+    @OneToMany(mappedBy = "medicalRecord")
+    private List<Prescription> prescriptions = new ArrayList<>();
 }
