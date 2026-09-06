@@ -31,4 +31,10 @@ public class DepartmentService {
     public List<Department> getAllDepartments() {
         return departmentRepository.findByIsActiveTrue();
     }
+
+    public Department getDepartmentById(Long id) {
+        return departmentRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Department not found with ID: " + id));
+    }
 }
