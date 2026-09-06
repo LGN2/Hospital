@@ -62,4 +62,11 @@ public class HospitalService {
         }
         return hospitalRepository.save(existingHospital);
     }
+
+    //Delete
+    public void deleteHospital(Long id) {
+        Hospital hospital = getHospitalById(id);
+        hospital.setIsActive(false);
+        hospitalRepository.save(hospital);
+    }
 }
