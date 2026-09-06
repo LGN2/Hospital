@@ -52,4 +52,8 @@ public class AppointmentService {
                 .orElseThrow(() ->
                         new RuntimeException("Appointment not found"));
     }
+
+    public List<Appointment> getAppointmentsByDoctor(Long doctorId) {
+        return appointmentRepository.findByDoctorIdAndIsActiveTrue(doctorId);
+    }
 }
