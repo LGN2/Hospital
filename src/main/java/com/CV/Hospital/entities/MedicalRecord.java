@@ -16,4 +16,7 @@ public class MedicalRecord extends BaseClass{
 
     @Column(nullable = false, length = 200)
     private String diagnosis;
+
+    @Column(length = 1000)
+    private String notes;
 }
