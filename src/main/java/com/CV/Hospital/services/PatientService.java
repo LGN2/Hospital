@@ -1,5 +1,7 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.entities.Hospital;
+import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.repositories.HospitalRepository;
 import com.CV.Hospital.repositories.PatientRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,4 +13,14 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final HospitalRepository hospitalRepository;
+
+    public Patient addPatient(Patient patient, Long hospitalId) {
+        Hospital hospital =
+                hospitalRepository.findByIdAndIsActiveTrue(hospitalId)
+                        .orElseThrow(() ->
+                                new RuntimeException("Hospital not found"));
+        patient.setHospital(hospital);
+        patient.setIsActive(true);
+        return patientRepository.save(patient);
+    }
 }
