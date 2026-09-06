@@ -19,4 +19,7 @@ public class Staff extends BaseClass{
 
     @Column(nullable = false, length = 50)
     private String role;
+
+    @Column(nullable = false, length = 20)
+    private String phoneNumber;
 }
