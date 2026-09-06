@@ -35,4 +35,10 @@ public class RoomService {
         return roomRepository.findByIsActiveTrue();
     }
 
+    public Room getRoomById(Long id) {
+        return roomRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found"));
+    }
+
 }
