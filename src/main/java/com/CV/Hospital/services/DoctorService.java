@@ -45,4 +45,10 @@ public class DoctorService {
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findByIsActiveTrue();
     }
+
+    public Doctor getDoctorById(Long id) {
+        return doctorRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Doctor not found with ID: " + id));
+    }
 }
