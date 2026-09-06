@@ -37,4 +37,8 @@ public class DepartmentService {
                 .orElseThrow(() ->
                         new RuntimeException("Department not found with ID: " + id));
     }
+
+    public List<Department> getDepartmentsByHospital(Long hospitalId) {
+        return departmentRepository.findByHospitalIdAndIsActiveTrue(hospitalId);
+    }
 }
