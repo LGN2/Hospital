@@ -1,22 +1,39 @@
 package com.CV.Hospital.entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+@MappedSuperclass
 @Getter
 @Setter
-public class BaseClass {
+public abstract class BaseClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private Boolean isActive = true;
-    private Date createdDate;
-    private Date updatedDate;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    private LocalDateTime updatedDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = LocalDateTime.now();
+
+        if (isActive == null) {
+            isActive = true;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedDate = LocalDateTime.now();
+    }
 }
