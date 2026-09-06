@@ -57,4 +57,10 @@ public class PatientService {
         }
         return patientRepository.save(patient);
     }
+
+    public void deletePatient(Long id) {
+        Patient patient = getPatientById(id);
+        patient.setIsActive(false);
+        patientRepository.save(patient);
+    }
 }
