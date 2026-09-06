@@ -60,4 +60,10 @@ public class MedicalRecordService {
         return medicalRecordRepository.save(record);
     }
 
+    public void deleteMedicalRecord(Long id) {
+        MedicalRecord record = getMedicalRecordById(id);
+        record.setIsActive(false);
+        medicalRecordRepository.save(record);
+    }
+
 }
