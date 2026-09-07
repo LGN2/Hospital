@@ -32,4 +32,10 @@ public class GuardianService {
         return guardianRepository.findByIsActiveTrue();
     }
 
+    public Guardian getGuardianById(Long id) {
+        return guardianRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Guardian not found"));
+    }
+
 }
