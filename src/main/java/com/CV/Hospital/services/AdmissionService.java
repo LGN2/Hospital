@@ -57,4 +57,9 @@ public class AdmissionService {
                 .orElseThrow(() ->
                         new RuntimeException("Admission not found"));
     }
+
+    public List<Admission> getAdmissionsByPatient(Long patientId) {
+        return admissionRepository
+                .findByPatientIdAndIsActiveTrue(patientId);
+    }
 }
