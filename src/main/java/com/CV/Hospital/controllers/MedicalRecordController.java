@@ -34,4 +34,12 @@ public class MedicalRecordController {
     public MedicalRecord getMedicalRecordById(@PathVariable Long id) {
         return medicalRecordService.getMedicalRecordById(id);
     }
+
+    @GetMapping("/patient/{patientId}")
+    public List<MedicalRecord> getMedicalRecordsByPatient(
+            @PathVariable Long patientId) {
+
+        return medicalRecordService
+                .getMedicalRecordsByPatient(patientId);
+    }
 }
