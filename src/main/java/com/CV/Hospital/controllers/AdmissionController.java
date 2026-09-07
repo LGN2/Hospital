@@ -32,4 +32,9 @@ public class AdmissionController {
         return admissionService.getAllAdmissions();
     }
 
+    @GetMapping("/{id}")
+    public Admission getAdmissionById(@PathVariable Long id) {
+        return admissionService.getAdmissionById(id);
+    }
+
 }
