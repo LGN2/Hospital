@@ -38,4 +38,9 @@ public class BillController {
 
         return billService.getBillsByPatient(patientId);
     }
+
+    @GetMapping("/unpaid")
+    public List<Bill> getUnpaidBills() {
+        return billService.getUnpaidBills();
+    }
 }
