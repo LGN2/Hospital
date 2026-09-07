@@ -5,6 +5,8 @@ import com.CV.Hospital.services.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/appointments")
 @RequiredArgsConstructor
@@ -22,5 +24,10 @@ public class AppointmentController {
                 doctorId,
                 patientId
         );
+    }
+
+    @GetMapping
+    public List<Appointment> getAllAppointments() {
+        return appointmentService.getAllAppointments();
     }
 }
