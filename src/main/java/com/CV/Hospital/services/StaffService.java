@@ -58,4 +58,10 @@ public class StaffService {
         }
         return staffRepository.save(staff);
     }
+
+    public void deleteStaff(Long id) {
+        Staff staff = getStaffById(id);
+        staff.setIsActive(false);
+        staffRepository.save(staff);
+    }
 }
