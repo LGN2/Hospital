@@ -67,4 +67,19 @@ public class AdmissionService {
         return admissionRepository
                 .findByRoomIdAndIsActiveTrue(roomId);
     }
+
+    public Admission updateAdmission(
+            Long id,
+            Admission updatedAdmission) {
+        Admission admission = getAdmissionById(id);
+        if (updatedAdmission.getAdmitDate() != null) {
+            admission.setAdmitDate(updatedAdmission.getAdmitDate());
+        }
+        if (updatedAdmission.getDischargeDate() != null) {
+            admission.setDischargeDate(
+                    updatedAdmission.getDischargeDate()
+            );
+        }
+        return admissionRepository.save(admission);
+    }
 }
