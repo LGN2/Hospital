@@ -46,4 +46,9 @@ public class StaffController {
 
         return staffService.updateStaff(id, staff);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteStaff(@PathVariable Long id) {
+        staffService.deleteStaff(id);
+    }
 }
