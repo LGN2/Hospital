@@ -63,4 +63,10 @@ public class GuardianService {
         return guardianRepository.save(guardian);
     }
 
+    public void deleteGuardian(Long id) {
+        Guardian guardian = getGuardianById(id);
+        guardian.setIsActive(false);
+        guardianRepository.save(guardian);
+    }
+
 }
