@@ -47,4 +47,9 @@ public class DepartmentController {
         return departmentService.updateDepartment(id, department);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteDepartment(@PathVariable Long id) {
+        departmentService.deleteDepartment(id);
+    }
+
 }
