@@ -5,6 +5,8 @@ import com.CV.Hospital.services.BillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/bills")
 @RequiredArgsConstructor
@@ -18,5 +20,10 @@ public class BillController {
             @RequestParam Long patientId) {
 
         return billService.addBill(bill, patientId);
+    }
+
+    @GetMapping
+    public List<Bill> getAllBills() {
+        return billService.getAllBills();
     }
 }
