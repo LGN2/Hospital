@@ -1,9 +1,9 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.entities.Guardian;
 import com.CV.Hospital.services.GuardianService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/guardians")
@@ -11,4 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class GuardianController {
 
     private final GuardianService guardianService;
+
+    @PostMapping
+    public Guardian addGuardian(
+            @RequestBody Guardian guardian,
+            @RequestParam Long patientId) {
+
+        return guardianService.addGuardian(guardian, patientId);
+    }
 }
