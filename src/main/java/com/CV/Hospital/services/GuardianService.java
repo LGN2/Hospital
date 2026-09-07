@@ -38,4 +38,9 @@ public class GuardianService {
                         new RuntimeException("Guardian not found"));
     }
 
+    public List<Guardian> getGuardiansByPatient(Long patientId) {
+        return guardianRepository
+                .findByPatientIdAndIsActiveTrue(patientId);
+    }
+
 }
