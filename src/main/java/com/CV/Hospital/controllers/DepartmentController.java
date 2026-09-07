@@ -5,6 +5,8 @@ import com.CV.Hospital.services.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/departments")
 @RequiredArgsConstructor
@@ -18,6 +20,11 @@ public class DepartmentController {
             @RequestParam Long hospitalId) {
 
         return departmentService.addDepartment(department, hospitalId);
+    }
+
+    @GetMapping
+    public List<Department> getAllDepartments() {
+        return departmentService.getAllDepartments();
     }
 
 }
