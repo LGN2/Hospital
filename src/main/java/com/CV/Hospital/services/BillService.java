@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +39,9 @@ public class BillService {
             bill.setStatus(BillStatusType.UNPAID);
         }
         return billRepository.save(bill);
+    }
+
+    public List<Bill> getAllBills() {
+        return billRepository.findByIsActiveTrue();
     }
 }
