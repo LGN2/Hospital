@@ -26,4 +26,9 @@ public class BillController {
     public List<Bill> getAllBills() {
         return billService.getAllBills();
     }
+
+    @GetMapping("/{id}")
+    public Bill getBillById(@PathVariable Long id) {
+        return billService.getBillById(id);
+    }
 }
