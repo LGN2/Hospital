@@ -26,4 +26,9 @@ public class StaffController {
     public List<Staff> getAllStaff() {
         return staffService.getAllStaff();
     }
+
+    @GetMapping("/{id}")
+    public Staff getStaffById(@PathVariable Long id) {
+        return staffService.getStaffById(id);
+    }
 }
