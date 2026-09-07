@@ -32,4 +32,11 @@ public class DepartmentController {
         return departmentService.getDepartmentById(id);
     }
 
+    @GetMapping("/hospital/{hospitalId}")
+    public List<Department> getDepartmentsByHospital(
+            @PathVariable Long hospitalId) {
+
+        return departmentService.getDepartmentsByHospital(hospitalId);
+    }
+
 }
