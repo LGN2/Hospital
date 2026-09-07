@@ -31,4 +31,11 @@ public class GuardianController {
     public Guardian getGuardianById(@PathVariable Long id) {
         return guardianService.getGuardianById(id);
     }
+
+    @GetMapping("/patient/{patientId}")
+    public List<Guardian> getGuardiansByPatient(
+            @PathVariable Long patientId) {
+
+        return guardianService.getGuardiansByPatient(patientId);
+    }
 }
