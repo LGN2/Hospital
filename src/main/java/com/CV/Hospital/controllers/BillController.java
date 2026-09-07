@@ -31,4 +31,11 @@ public class BillController {
     public Bill getBillById(@PathVariable Long id) {
         return billService.getBillById(id);
     }
+
+    @GetMapping("/patient/{patientId}")
+    public List<Bill> getBillsByPatient(
+            @PathVariable Long patientId) {
+
+        return billService.getBillsByPatient(patientId);
+    }
 }
