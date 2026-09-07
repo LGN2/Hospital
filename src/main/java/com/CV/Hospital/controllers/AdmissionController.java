@@ -37,4 +37,11 @@ public class AdmissionController {
         return admissionService.getAdmissionById(id);
     }
 
+    @GetMapping("/patient/{patientId}")
+    public List<Admission> getAdmissionsByPatient(
+            @PathVariable Long patientId) {
+
+        return admissionService.getAdmissionsByPatient(patientId);
+    }
+
 }
