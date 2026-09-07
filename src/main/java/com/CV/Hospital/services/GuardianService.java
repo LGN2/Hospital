@@ -43,4 +43,24 @@ public class GuardianService {
                 .findByPatientIdAndIsActiveTrue(patientId);
     }
 
+    public Guardian updateGuardian(
+            Long id,
+            Guardian updatedGuardian) {
+        Guardian guardian = getGuardianById(id);
+        if (updatedGuardian.getName() != null) {
+            guardian.setName(updatedGuardian.getName());
+        }
+        if (updatedGuardian.getRelationship() != null) {
+            guardian.setRelationship(
+                    updatedGuardian.getRelationship()
+            );
+        }
+        if (updatedGuardian.getPhoneNumber() != null) {
+            guardian.setPhoneNumber(
+                    updatedGuardian.getPhoneNumber()
+            );
+        }
+        return guardianRepository.save(guardian);
+    }
+
 }
