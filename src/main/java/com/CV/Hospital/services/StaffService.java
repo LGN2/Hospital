@@ -37,4 +37,9 @@ public class StaffService {
                 .orElseThrow(() ->
                         new RuntimeException("Staff not found"));
     }
+
+    public List<Staff> getStaffByDepartment(Long departmentId) {
+        return staffRepository
+                .findByDepartmentIdAndIsActiveTrue(departmentId);
+    }
 }
