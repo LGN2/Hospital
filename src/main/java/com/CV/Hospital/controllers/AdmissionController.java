@@ -5,6 +5,8 @@ import com.CV.Hospital.services.AdmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admissions")
 @RequiredArgsConstructor
@@ -23,6 +25,11 @@ public class AdmissionController {
                 patientId,
                 roomId
         );
+    }
+
+    @GetMapping
+    public List<Admission> getAllAdmissions() {
+        return admissionService.getAllAdmissions();
     }
 
 }
