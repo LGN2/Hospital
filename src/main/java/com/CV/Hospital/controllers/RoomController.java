@@ -5,6 +5,8 @@ import com.CV.Hospital.services.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/rooms")
 @RequiredArgsConstructor
@@ -18,5 +20,10 @@ public class RoomController {
             @RequestParam Long hospitalId) {
 
         return roomService.addRoom(room, hospitalId);
+    }
+
+    @GetMapping
+    public List<Room> getAllRooms() {
+        return roomService.getAllRooms();
     }
 }
