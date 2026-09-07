@@ -5,6 +5,8 @@ import com.CV.Hospital.services.PrescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/prescriptions")
 @RequiredArgsConstructor
@@ -21,5 +23,10 @@ public class PrescriptionController {
                 prescription,
                 medicalRecordId
         );
+    }
+
+    @GetMapping
+    public List<Prescription> getAllPrescriptions() {
+        return prescriptionService.getAllPrescriptions();
     }
 }
