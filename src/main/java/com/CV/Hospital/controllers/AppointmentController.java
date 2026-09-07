@@ -57,4 +57,9 @@ public class AppointmentController {
 
         return appointmentService.updateAppointment(id, appointment);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteAppointment(@PathVariable Long id) {
+        appointmentService.deleteAppointment(id);
+    }
 }
