@@ -7,6 +7,8 @@ import com.CV.Hospital.repositories.StaffRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StaffService {
@@ -24,5 +26,9 @@ public class StaffService {
         staff.setDepartment(department);
         staff.setIsActive(true);
         return staffRepository.save(staff);
+    }
+
+    public List<Staff> getAllStaff() {
+        return staffRepository.findByIsActiveTrue();
     }
 }
