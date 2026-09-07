@@ -47,4 +47,8 @@ public class AdmissionService {
         }
         return admissionRepository.save(admission);
     }
+
+    public List<Admission> getAllAdmissions() {
+        return admissionRepository.findByIsActiveTrue();
+    }
 }
