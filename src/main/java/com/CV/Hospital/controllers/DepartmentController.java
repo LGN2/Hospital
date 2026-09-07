@@ -39,4 +39,12 @@ public class DepartmentController {
         return departmentService.getDepartmentsByHospital(hospitalId);
     }
 
+    @PutMapping("/{id}")
+    public Department updateDepartment(
+            @PathVariable Long id,
+            @RequestBody Department department) {
+
+        return departmentService.updateDepartment(id, department);
+    }
+
 }
