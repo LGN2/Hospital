@@ -46,4 +46,9 @@ public class GuardianController {
 
         return guardianService.updateGuardian(id, guardian);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteGuardian(@PathVariable Long id) {
+        guardianService.deleteGuardian(id);
+    }
 }
