@@ -55,4 +55,9 @@ public class BillService {
         return billRepository
                 .findByPatientIdAndIsActiveTrue(patientId);
     }
+
+    public List<Bill> getUnpaidBills() {
+        return billRepository
+                .findByStatusAndIsActiveTrue(BillStatusType.UNPAID);
+    }
 }
