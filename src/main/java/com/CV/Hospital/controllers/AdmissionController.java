@@ -64,4 +64,9 @@ public class AdmissionController {
         return admissionService.dischargePatient(id);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteAdmission(@PathVariable Long id) {
+        admissionService.deleteAdmission(id);
+    }
+
 }
