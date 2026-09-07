@@ -26,4 +26,9 @@ public class GuardianController {
     public List<Guardian> getAllGuardians() {
         return guardianService.getAllGuardians();
     }
+
+    @GetMapping("/{id}")
+    public Guardian getGuardianById(@PathVariable Long id) {
+        return guardianService.getGuardianById(id);
+    }
 }
