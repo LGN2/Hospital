@@ -42,4 +42,20 @@ public class StaffService {
         return staffRepository
                 .findByDepartmentIdAndIsActiveTrue(departmentId);
     }
+
+    public Staff updateStaff(
+            Long id,
+            Staff updatedStaff) {
+        Staff staff = getStaffById(id);
+        if (updatedStaff.getName() != null) {
+            staff.setName(updatedStaff.getName());
+        }
+        if (updatedStaff.getRole() != null) {
+            staff.setRole(updatedStaff.getRole());
+        }
+        if (updatedStaff.getPhoneNumber() != null) {
+            staff.setPhoneNumber(updatedStaff.getPhoneNumber());
+        }
+        return staffRepository.save(staff);
+    }
 }
