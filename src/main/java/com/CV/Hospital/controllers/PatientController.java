@@ -31,4 +31,11 @@ public class PatientController {
     public Patient getPatientById(@PathVariable Long id) {
         return patientService.getPatientById(id);
     }
+
+    @GetMapping("/hospital/{hospitalId}")
+    public List<Patient> getPatientsByHospital(
+            @PathVariable Long hospitalId) {
+
+        return patientService.getPatientsByHospital(hospitalId);
+    }
 }
