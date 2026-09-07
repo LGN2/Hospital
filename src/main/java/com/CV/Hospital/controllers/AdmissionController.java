@@ -59,4 +59,9 @@ public class AdmissionController {
         return admissionService.updateAdmission(id, admission);
     }
 
+    @PutMapping("/{id}/discharge")
+    public Admission dischargePatient(@PathVariable Long id) {
+        return admissionService.dischargePatient(id);
+    }
+
 }
