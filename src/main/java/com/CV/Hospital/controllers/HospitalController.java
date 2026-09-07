@@ -28,4 +28,12 @@ public class HospitalController {
     public Hospital getHospitalById(@PathVariable Long id) {
         return hospitalService.getHospitalById(id);
     }
+
+    @PutMapping("/{id}")
+    public Hospital updateHospital(
+            @PathVariable Long id,
+            @RequestBody Hospital hospital) {
+
+        return hospitalService.updateHospital(id, hospital);
+    }
 }
