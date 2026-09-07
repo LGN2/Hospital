@@ -93,4 +93,10 @@ public class AdmissionService {
         admission.setDischargeDate(LocalDate.now());
         return admissionRepository.save(admission);
     }
+
+    public void deleteAdmission(Long id) {
+        Admission admission = getAdmissionById(id);
+        admission.setIsActive(false);
+        admissionRepository.save(admission);
+    }
 }
