@@ -53,4 +53,9 @@ public class MedicalRecordController {
                 medicalRecord
         );
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteMedicalRecord(@PathVariable Long id) {
+        medicalRecordService.deleteMedicalRecord(id);
+    }
 }
