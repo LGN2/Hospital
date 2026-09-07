@@ -44,4 +44,10 @@ public class BillService {
     public List<Bill> getAllBills() {
         return billRepository.findByIsActiveTrue();
     }
+
+    public Bill getBillById(Long id) {
+        return billRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Bill not found"));
+    }
 }
