@@ -23,4 +23,9 @@ public class HospitalController {
     public List<Hospital> getAllHospitals() {
         return hospitalService.getAllHospitals();
     }
+
+    @GetMapping("/{id}")
+    public Hospital getHospitalById(@PathVariable Long id) {
+        return hospitalService.getHospitalById(id);
+    }
 }
