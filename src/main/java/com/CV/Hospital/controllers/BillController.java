@@ -58,4 +58,9 @@ public class BillController {
 
         return billService.updateBill(id, bill);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteBill(@PathVariable Long id) {
+        billService.deleteBill(id);
+    }
 }
