@@ -53,4 +53,9 @@ public class PrescriptionController {
                 prescription
         );
     }
+
+    @DeleteMapping("/{id}")
+    public void deletePrescription(@PathVariable Long id) {
+        prescriptionService.deletePrescription(id);
+    }
 }
