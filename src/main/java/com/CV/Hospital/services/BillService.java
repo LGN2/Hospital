@@ -50,4 +50,9 @@ public class BillService {
                 .orElseThrow(() ->
                         new RuntimeException("Bill not found"));
     }
+
+    public List<Bill> getBillsByPatient(Long patientId) {
+        return billRepository
+                .findByPatientIdAndIsActiveTrue(patientId);
+    }
 }
