@@ -31,4 +31,11 @@ public class RoomController {
     public Room getRoomById(@PathVariable Long id) {
         return roomService.getRoomById(id);
     }
+
+    @GetMapping("/hospital/{hospitalId}")
+    public List<Room> getRoomsByHospital(
+            @PathVariable Long hospitalId) {
+
+        return roomService.getRoomsByHospital(hospitalId);
+    }
 }
