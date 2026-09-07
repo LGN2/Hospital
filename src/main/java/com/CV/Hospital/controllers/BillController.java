@@ -50,4 +50,12 @@ public class BillController {
 
         return billService.getUnpaidBillsByPatient(patientId);
     }
+
+    @PutMapping("/{id}")
+    public Bill updateBill(
+            @PathVariable Long id,
+            @RequestBody Bill bill) {
+
+        return billService.updateBill(id, bill);
+    }
 }
