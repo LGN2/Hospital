@@ -35,4 +35,11 @@ public class DoctorController {
     public Doctor getDoctorById(@PathVariable Long id) {
         return doctorService.getDoctorById(id);
     }
+
+    @GetMapping("/department/{departmentId}")
+    public List<Doctor> getDoctorsByDepartment(
+            @PathVariable Long departmentId) {
+
+        return doctorService.getDoctorsByDepartment(departmentId);
+    }
 }
