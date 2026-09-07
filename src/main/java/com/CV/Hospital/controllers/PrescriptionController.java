@@ -42,4 +42,15 @@ public class PrescriptionController {
         return prescriptionService
                 .getPrescriptionsByMedicalRecord(medicalRecordId);
     }
+
+    @PutMapping("/{id}")
+    public Prescription updatePrescription(
+            @PathVariable Long id,
+            @RequestBody Prescription prescription) {
+
+        return prescriptionService.updatePrescription(
+                id,
+                prescription
+        );
+    }
 }
