@@ -68,4 +68,19 @@ public class BillService {
                         BillStatusType.UNPAID
                 );
     }
+
+    public Bill updateBill(Long id, Bill updatedBill) {
+        Bill bill = getBillById(id);
+        if (updatedBill.getAmount() != null) {
+            bill.setAmount(updatedBill.getAmount());
+        }
+        if (updatedBill.getStatus() != null) {
+            bill.setStatus(updatedBill.getStatus());
+        }
+        if (updatedBill.getBillDate() != null) {
+            bill.setBillDate(updatedBill.getBillDate());
+        }
+        return billRepository.save(bill);
+    }
+
 }
