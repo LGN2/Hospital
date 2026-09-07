@@ -31,4 +31,11 @@ public class StaffController {
     public Staff getStaffById(@PathVariable Long id) {
         return staffService.getStaffById(id);
     }
+
+    @GetMapping("/department/{departmentId}")
+    public List<Staff> getStaffByDepartment(
+            @PathVariable Long departmentId) {
+
+        return staffService.getStaffByDepartment(departmentId);
+    }
 }
