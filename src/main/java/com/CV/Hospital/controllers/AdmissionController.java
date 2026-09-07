@@ -51,4 +51,12 @@ public class AdmissionController {
         return admissionService.getAdmissionsByRoom(roomId);
     }
 
+    @PutMapping("/{id}")
+    public Admission updateAdmission(
+            @PathVariable Long id,
+            @RequestBody Admission admission) {
+
+        return admissionService.updateAdmission(id, admission);
+    }
+
 }
