@@ -31,4 +31,10 @@ public class StaffService {
     public List<Staff> getAllStaff() {
         return staffRepository.findByIsActiveTrue();
     }
+
+    public Staff getStaffById(Long id) {
+        return staffRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Staff not found"));
+    }
 }
