@@ -38,4 +38,12 @@ public class GuardianController {
 
         return guardianService.getGuardiansByPatient(patientId);
     }
+
+    @PutMapping("/{id}")
+    public Guardian updateGuardian(
+            @PathVariable Long id,
+            @RequestBody Guardian guardian) {
+
+        return guardianService.updateGuardian(id, guardian);
+    }
 }
