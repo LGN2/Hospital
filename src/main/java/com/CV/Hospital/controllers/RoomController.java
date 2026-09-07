@@ -38,4 +38,12 @@ public class RoomController {
 
         return roomService.getRoomsByHospital(hospitalId);
     }
+
+    @PutMapping("/{id}")
+    public Room updateRoom(
+            @PathVariable Long id,
+            @RequestBody Room room) {
+
+        return roomService.updateRoom(id, room);
+    }
 }
