@@ -44,4 +44,11 @@ public class AdmissionController {
         return admissionService.getAdmissionsByPatient(patientId);
     }
 
+    @GetMapping("/room/{roomId}")
+    public List<Admission> getAdmissionsByRoom(
+            @PathVariable Long roomId) {
+
+        return admissionService.getAdmissionsByRoom(roomId);
+    }
+
 }
