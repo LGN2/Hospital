@@ -38,4 +38,12 @@ public class StaffController {
 
         return staffService.getStaffByDepartment(departmentId);
     }
+
+    @PutMapping("/{id}")
+    public Staff updateStaff(
+            @PathVariable Long id,
+            @RequestBody Staff staff) {
+
+        return staffService.updateStaff(id, staff);
+    }
 }
