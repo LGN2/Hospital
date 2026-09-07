@@ -5,6 +5,8 @@ import com.CV.Hospital.services.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/staff")
 @RequiredArgsConstructor
@@ -18,5 +20,10 @@ public class StaffController {
             @RequestParam Long departmentId) {
 
         return staffService.addStaff(staff, departmentId);
+    }
+
+    @GetMapping
+    public List<Staff> getAllStaff() {
+        return staffService.getAllStaff();
     }
 }
