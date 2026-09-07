@@ -82,4 +82,15 @@ public class AdmissionService {
         }
         return admissionRepository.save(admission);
     }
+
+    public Admission dischargePatient(Long id) {
+        Admission admission = getAdmissionById(id);
+        if (admission.getDischargeDate() != null) {
+            throw new IllegalStateException(
+                    "Patient has already been discharged"
+            );
+        }
+        admission.setDischargeDate(LocalDate.now());
+        return admissionRepository.save(admission);
+    }
 }
