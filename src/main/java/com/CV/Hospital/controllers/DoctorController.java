@@ -49,4 +49,12 @@ public class DoctorController {
 
         return doctorService.getDoctorsByHospital(hospitalId);
     }
+
+    @PutMapping("/{id}")
+    public Doctor updateDoctor(
+            @PathVariable Long id,
+            @RequestBody Doctor doctor) {
+
+        return doctorService.updateDoctor(id, doctor);
+    }
 }
