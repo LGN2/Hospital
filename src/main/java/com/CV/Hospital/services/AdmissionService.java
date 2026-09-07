@@ -62,4 +62,9 @@ public class AdmissionService {
         return admissionRepository
                 .findByPatientIdAndIsActiveTrue(patientId);
     }
+
+    public List<Admission> getAdmissionsByRoom(Long roomId) {
+        return admissionRepository
+                .findByRoomIdAndIsActiveTrue(roomId);
+    }
 }
