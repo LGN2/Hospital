@@ -51,4 +51,10 @@ public class AdmissionService {
     public List<Admission> getAllAdmissions() {
         return admissionRepository.findByIsActiveTrue();
     }
+
+    public Admission getAdmissionById(Long id) {
+        return admissionRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Admission not found"));
+    }
 }
