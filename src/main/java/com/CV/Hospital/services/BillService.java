@@ -83,4 +83,10 @@ public class BillService {
         return billRepository.save(bill);
     }
 
+    public void deleteBill(Long id) {
+        Bill bill = getBillById(id);
+        bill.setIsActive(false);
+        billRepository.save(bill);
+    }
+
 }
