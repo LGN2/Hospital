@@ -42,4 +42,15 @@ public class MedicalRecordController {
         return medicalRecordService
                 .getMedicalRecordsByPatient(patientId);
     }
+
+    @PutMapping("/{id}")
+    public MedicalRecord updateMedicalRecord(
+            @PathVariable Long id,
+            @RequestBody MedicalRecord medicalRecord) {
+
+        return medicalRecordService.updateMedicalRecord(
+                id,
+                medicalRecord
+        );
+    }
 }
