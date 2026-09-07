@@ -49,4 +49,12 @@ public class AppointmentController {
 
         return appointmentService.getAppointmentsByPatient(patientId);
     }
+
+    @PutMapping("/{id}")
+    public Appointment updateAppointment(
+            @PathVariable Long id,
+            @RequestBody Appointment appointment) {
+
+        return appointmentService.updateAppointment(id, appointment);
+    }
 }
