@@ -28,6 +28,6 @@ public class Department extends BaseClass{
     @OneToMany(mappedBy = "department")
     private List<Doctor> doctors = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "department")
     private List<Staff> staff = new ArrayList<>();
 }
