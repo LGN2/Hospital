@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.StaffDTO;
-import com.CV.Hospital.entities.Staff;
 import com.CV.Hospital.services.StaffService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,45 +17,31 @@ public class StaffController {
 
     @PostMapping
     public StaffDTO addStaff(
-            @RequestBody Staff staff,
-            @RequestParam Long departmentId) {
-
-        return staffService.convertToDTO(
-                staffService.addStaff(staff, departmentId)
-        );
+            @Valid @RequestBody StaffDTO dto) {
+        return staffService.addStaff(dto);
     }
 
     @GetMapping
     public List<StaffDTO> getAllStaff() {
-        return staffService.convertToDTO(
-                staffService.getAllStaff()
-        );
+        return staffService.getAllStaff();
     }
 
     @GetMapping("/{id}")
     public StaffDTO getStaffById(@PathVariable Long id) {
-        return staffService.convertToDTO(
-                staffService.getStaffById(id)
-        );
+        return staffService.getStaffById(id);
     }
 
     @GetMapping("/department/{departmentId}")
     public List<StaffDTO> getStaffByDepartment(
             @PathVariable Long departmentId) {
-
-        return staffService.convertToDTO(
-                staffService.getStaffByDepartment(departmentId)
-        );
+        return staffService.getStaffByDepartment(departmentId);
     }
 
     @PutMapping("/{id}")
     public StaffDTO updateStaff(
             @PathVariable Long id,
-            @RequestBody Staff staff) {
-
-        return staffService.convertToDTO(
-                staffService.updateStaff(id, staff)
-        );
+            @Valid @RequestBody StaffDTO dto) {
+        return staffService.updateStaff(id, dto);
     }
 
     @DeleteMapping("/{id}")
