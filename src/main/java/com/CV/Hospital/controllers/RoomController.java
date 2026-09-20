@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.RoomDTO;
 import com.CV.Hospital.entities.Room;
 import com.CV.Hospital.services.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -15,36 +16,46 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping
-    public Room addRoom(
+    public RoomDTO addRoom(
             @RequestBody Room room,
             @RequestParam Long hospitalId) {
 
-        return roomService.addRoom(room, hospitalId);
+        return roomService.convertToDTO(
+                roomService.addRoom(room, hospitalId)
+        );
     }
 
     @GetMapping
-    public List<Room> getAllRooms() {
-        return roomService.getAllRooms();
+    public List<RoomDTO> getAllRooms() {
+        return roomService.convertToDTO(
+                roomService.getAllRooms()
+        );
     }
 
     @GetMapping("/{id}")
-    public Room getRoomById(@PathVariable Long id) {
-        return roomService.getRoomById(id);
+    public RoomDTO getRoomById(@PathVariable Long id) {
+        return roomService.convertToDTO(
+                roomService.getRoomById(id)
+        );
     }
 
     @GetMapping("/hospital/{hospitalId}")
-    public List<Room> getRoomsByHospital(
+    public List<RoomDTO> getRoomsByHospital(
             @PathVariable Long hospitalId) {
 
-        return roomService.getRoomsByHospital(hospitalId);
+        return roomService.convertToDTO(
+                roomService.getRoomsByHospital(hospitalId)
+        );
     }
 
     @PutMapping("/{id}")
-    public Room updateRoom(
+    public RoomDTO updateRoom(
             @PathVariable Long id,
             @RequestBody Room room) {
 
-        return roomService.updateRoom(id, room);
+        return roomService.convertToDTO(
+                roomService.updateRoom(id, room)
+        );
     }
 
     @DeleteMapping("/{id}")
