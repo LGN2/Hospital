@@ -1,5 +1,7 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.BadRequestException;
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.DoctorDTO;
 import com.CV.Hospital.entities.Department;
 import com.CV.Hospital.entities.Doctor;
@@ -93,19 +95,19 @@ public class DoctorService {
     private Doctor findActiveDoctor(Long id) {
         return doctorRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Doctor not found"));
+                        new ResourceNotFoundException("Doctor not found"));
     }
 
     private Department getDepartment(Long id) {
         return departmentRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Department not found"));
+                        new ResourceNotFoundException("Department not found"));
     }
 
     private Hospital getHospital(Long id) {
         return hospitalRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Hospital not found"));
+                        new ResourceNotFoundException("Hospital not found"));
     }
 
     private void validateDepartmentHospital(
@@ -115,7 +117,7 @@ public class DoctorService {
         if (!department.getHospital().getId()
                 .equals(hospital.getId())) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Department does not belong to selected hospital"
             );
         }
