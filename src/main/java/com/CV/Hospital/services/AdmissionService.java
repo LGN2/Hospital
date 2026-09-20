@@ -91,6 +91,10 @@ public class AdmissionService {
             throw new BadRequestException("Discharge date cannot be before admission date");
         }
 
+        if (dto.getDischargeDate() != null && dto.getDischargeDate().isBefore(dto.getAdmitDate())) {
+            throw new BadRequestException("Discharge date cannot be before admission date");
+        }
+
         admission.setPatient(patient);
         admission.setRoom(room);
         admission.setAdmitDate(dto.getAdmitDate());
