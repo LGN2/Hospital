@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.DepartmentDTO;
-import com.CV.Hospital.entities.Department;
 import com.CV.Hospital.services.DepartmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,45 +17,33 @@ public class DepartmentController {
 
     @PostMapping
     public DepartmentDTO addDepartment(
-            @RequestBody Department department,
-            @RequestParam Long hospitalId) {
-
-        return departmentService.convertToDTO(
-                departmentService.addDepartment(department, hospitalId)
-        );
+            @Valid @RequestBody DepartmentDTO dto) {
+        return departmentService.addDepartment(dto);
     }
 
     @GetMapping
     public List<DepartmentDTO> getAllDepartments() {
-        return departmentService.convertToDTO(
-                departmentService.getAllDepartments()
-        );
+        return departmentService.getAllDepartments();
     }
 
     @GetMapping("/{id}")
-    public DepartmentDTO getDepartmentById(@PathVariable Long id) {
-        return departmentService.convertToDTO(
-                departmentService.getDepartmentById(id)
-        );
+    public DepartmentDTO getDepartmentById(
+            @PathVariable Long id) {
+        return departmentService.getDepartmentById(id);
     }
 
     @GetMapping("/hospital/{hospitalId}")
     public List<DepartmentDTO> getDepartmentsByHospital(
             @PathVariable Long hospitalId) {
-
-        return departmentService.convertToDTO(
-                departmentService.getDepartmentsByHospital(hospitalId)
-        );
+        return departmentService
+                .getDepartmentsByHospital(hospitalId);
     }
 
     @PutMapping("/{id}")
     public DepartmentDTO updateDepartment(
             @PathVariable Long id,
-            @RequestBody Department department) {
-
-        return departmentService.convertToDTO(
-                departmentService.updateDepartment(id, department)
-        );
+            @Valid @RequestBody DepartmentDTO dto) {
+        return departmentService.updateDepartment(id, dto);
     }
 
     @DeleteMapping("/{id}")
