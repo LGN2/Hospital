@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.PatientDTO;
 import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.repositories.HospitalRepository;
@@ -62,5 +63,26 @@ public class PatientService {
         Patient patient = getPatientById(id);
         patient.setIsActive(false);
         patientRepository.save(patient);
+    }
+
+    public PatientDTO convertToDTO(Patient patient) {
+        return PatientDTO.builder()
+                .id(patient.getId())
+                .name(patient.getName())
+                .gender(patient.getGender())
+                .phoneNumber(patient.getPhoneNumber())
+                .bloodGroup(patient.getBloodGroup())
+                .hospitalId(
+                        patient.getHospital() != null
+                                ? patient.getHospital().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<PatientDTO> convertToDTO(List<Patient> patients) {
+        return patients.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
