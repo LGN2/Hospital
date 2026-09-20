@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.AppointmentDTO;
 import com.CV.Hospital.entities.Appointment;
 import com.CV.Hospital.entities.Doctor;
 import com.CV.Hospital.entities.Patient;
@@ -83,5 +84,32 @@ public class AppointmentService {
         Appointment appointment = getAppointmentById(id);
         appointment.setIsActive(false);
         appointmentRepository.save(appointment);
+    }
+
+    public AppointmentDTO convertToDTO(Appointment appointment) {
+        return AppointmentDTO.builder()
+                .id(appointment.getId())
+                .appointmentDate(appointment.getAppointmentDate())
+                .reason(appointment.getReason())
+                .status(appointment.getStatus())
+                .doctorId(
+                        appointment.getDoctor() != null
+                                ? appointment.getDoctor().getId()
+                                : null
+                )
+                .patientId(
+                        appointment.getPatient() != null
+                                ? appointment.getPatient().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<AppointmentDTO> convertToDTO(
+            List<Appointment> appointments) {
+
+        return appointments.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
