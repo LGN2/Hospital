@@ -1,9 +1,8 @@
 package com.CV.Hospital.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 @Data
 @Builder
@@ -12,6 +11,12 @@ import lombok.NoArgsConstructor;
 public class HospitalDTO {
 
     private Long id;
+
+    @NotBlank(message = "Hospital name is required")
+    @Size(max = 100, message = "Hospital name cannot exceed 100 characters")
     private String name;
+
+    @NotBlank(message = "Hospital location is required")
+    @Size(max = 150, message = "Hospital location cannot exceed 150 characters")
     private String location;
 }
