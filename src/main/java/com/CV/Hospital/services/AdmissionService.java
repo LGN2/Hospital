@@ -16,89 +16,142 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AdmissionService {
+
     private final AdmissionRepository admissionRepository;
     private final PatientRepository patientRepository;
     private final RoomRepository roomRepository;
 
-    public Admission admitPatient(
-            Admission admission,
-            Long patientId,
-            Long roomId) {
-        Patient patient =
-                patientRepository.findByIdAndIsActiveTrue(patientId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Patient not found"));
-        Room room =
-                roomRepository.findByIdAndIsActiveTrue(roomId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Room not found"));
-        List<Admission> currentAdmissions =
+    public AdmissionDTO admitPatient(AdmissionDTO dto) {
+
+        Patient patient = getPatient(dto.getPatientId());
+        Room room = getRoom(dto.getRoomId());
+
+        checkRoomCapacity(room);
+
+        Admission admission = new Admission();
+
+        admission.setPatient(patient);
+        admission.setRoom(room);
+        admission.setAdmitDate(
+                dto.getAdmitDate() == null
+                        ? LocalDate.now()
+                        : dto.getAdmitDate()
+        );
+
+        admission.setDischargeDate(null);
+
+        return convertToDTO(
+                admissionRepository.save(admission)
+        );
+    }
+
+    public List<AdmissionDTO> getAllAdmissions() {
+        return convertToDTO(
+                admissionRepository.findByIsActiveTrue()
+        );
+    }
+
+    public AdmissionDTO getAdmissionById(Long id) {
+        return convertToDTO(findActiveAdmission(id));
+    }
+
+    public List<AdmissionDTO> getAdmissionsByPatient(
+            Long patientId) {
+
+        return convertToDTO(
                 admissionRepository
-                        .findByRoomIdAndDischargeDateIsNullAndIsActiveTrue(roomId);
-        if (currentAdmissions.size() >= room.getCapacity()) {
-            throw new IllegalStateException(
+                        .findByPatientIdAndIsActiveTrue(patientId)
+        );
+    }
+
+    public List<AdmissionDTO> getAdmissionsByRoom(Long roomId) {
+        return convertToDTO(
+                admissionRepository
+                        .findByRoomIdAndIsActiveTrue(roomId)
+        );
+    }
+
+    public AdmissionDTO updateAdmission(
+            Long id,
+            AdmissionDTO dto) {
+
+        Admission admission = findActiveAdmission(id);
+
+        Patient patient = getPatient(dto.getPatientId());
+        Room room = getRoom(dto.getRoomId());
+
+        if (!admission.getRoom().getId().equals(room.getId())) {
+            checkRoomCapacity(room);
+        }
+
+        admission.setPatient(patient);
+        admission.setRoom(room);
+        admission.setAdmitDate(dto.getAdmitDate());
+        admission.setDischargeDate(dto.getDischargeDate());
+
+        return convertToDTO(
+                admissionRepository.save(admission)
+        );
+    }
+
+    public AdmissionDTO dischargePatient(Long id) {
+
+        Admission admission = findActiveAdmission(id);
+
+        if (admission.getDischargeDate() != null) {
+            throw new IllegalArgumentException(
+                    "Patient is already discharged"
+            );
+        }
+
+        admission.setDischargeDate(LocalDate.now());
+
+        return convertToDTO(
+                admissionRepository.save(admission)
+        );
+    }
+
+    public void deleteAdmission(Long id) {
+        Admission admission = findActiveAdmission(id);
+        admission.setIsActive(false);
+        admissionRepository.save(admission);
+    }
+
+    private void checkRoomCapacity(Room room) {
+
+        int currentPatients =
+                admissionRepository
+                        .findByRoomIdAndDischargeDateIsNullAndIsActiveTrue(
+                                room.getId()
+                        )
+                        .size();
+
+        if (currentPatients >= room.getCapacity()) {
+            throw new IllegalArgumentException(
                     "Room has reached maximum capacity"
             );
         }
-        admission.setPatient(patient);
-        admission.setRoom(room);
-        admission.setIsActive(true);
-        if (admission.getAdmitDate() == null) {
-            admission.setAdmitDate(LocalDate.now());
-        }
-        return admissionRepository.save(admission);
     }
 
-    public List<Admission> getAllAdmissions() {
-        return admissionRepository.findByIsActiveTrue();
-    }
-
-    public Admission getAdmissionById(Long id) {
-        return admissionRepository.findByIdAndIsActiveTrue(id)
+    private Admission findActiveAdmission(Long id) {
+        return admissionRepository
+                .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
                         new RuntimeException("Admission not found"));
     }
 
-    public List<Admission> getAdmissionsByPatient(Long patientId) {
-        return admissionRepository
-                .findByPatientIdAndIsActiveTrue(patientId);
+    private Patient getPatient(Long id) {
+        return patientRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
     }
 
-    public List<Admission> getAdmissionsByRoom(Long roomId) {
-        return admissionRepository
-                .findByRoomIdAndIsActiveTrue(roomId);
-    }
-
-    public Admission updateAdmission(
-            Long id,
-            Admission updatedAdmission) {
-        Admission admission = getAdmissionById(id);
-        if (updatedAdmission.getAdmitDate() != null) {
-            admission.setAdmitDate(updatedAdmission.getAdmitDate());
-        }
-        if (updatedAdmission.getDischargeDate() != null) {
-            admission.setDischargeDate(
-                    updatedAdmission.getDischargeDate()
-            );
-        }
-        return admissionRepository.save(admission);
-    }
-
-    public Admission dischargePatient(Long id) {
-        Admission admission = getAdmissionById(id);
-        if (admission.getDischargeDate() != null) {
-            throw new IllegalStateException(
-                    "Patient has already been discharged"
-            );
-        }
-        admission.setDischargeDate(LocalDate.now());
-        return admissionRepository.save(admission);
-    }
-
-    public void deleteAdmission(Long id) {
-        Admission admission = getAdmissionById(id);
-        admission.setIsActive(false);
-        admissionRepository.save(admission);
+    private Room getRoom(Long id) {
+        return roomRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found"));
     }
 
     public AdmissionDTO convertToDTO(Admission admission) {
@@ -106,16 +159,8 @@ public class AdmissionService {
                 .id(admission.getId())
                 .admitDate(admission.getAdmitDate())
                 .dischargeDate(admission.getDischargeDate())
-                .patientId(
-                        admission.getPatient() != null
-                                ? admission.getPatient().getId()
-                                : null
-                )
-                .roomId(
-                        admission.getRoom() != null
-                                ? admission.getRoom().getId()
-                                : null
-                )
+                .patientId(admission.getPatient().getId())
+                .roomId(admission.getRoom().getId())
                 .build();
     }
 
