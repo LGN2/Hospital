@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.MedicalRecordDTO;
 import com.CV.Hospital.entities.MedicalRecord;
 import com.CV.Hospital.services.MedicalRecordService;
 import lombok.RequiredArgsConstructor;
@@ -15,42 +16,53 @@ public class MedicalRecordController {
     private final MedicalRecordService medicalRecordService;
 
     @PostMapping
-    public MedicalRecord addMedicalRecord(
+    public MedicalRecordDTO addMedicalRecord(
             @RequestBody MedicalRecord medicalRecord,
             @RequestParam Long patientId) {
 
-        return medicalRecordService.addMedicalRecord(
-                medicalRecord,
-                patientId
+        return medicalRecordService.convertToDTO(
+                medicalRecordService.addMedicalRecord(
+                        medicalRecord,
+                        patientId
+                )
         );
     }
 
     @GetMapping
-    public List<MedicalRecord> getAllMedicalRecords() {
-        return medicalRecordService.getAllMedicalRecords();
+    public List<MedicalRecordDTO> getAllMedicalRecords() {
+        return medicalRecordService.convertToDTO(
+                medicalRecordService.getAllMedicalRecords()
+        );
     }
 
     @GetMapping("/{id}")
-    public MedicalRecord getMedicalRecordById(@PathVariable Long id) {
-        return medicalRecordService.getMedicalRecordById(id);
+    public MedicalRecordDTO getMedicalRecordById(
+            @PathVariable Long id) {
+
+        return medicalRecordService.convertToDTO(
+                medicalRecordService.getMedicalRecordById(id)
+        );
     }
 
     @GetMapping("/patient/{patientId}")
-    public List<MedicalRecord> getMedicalRecordsByPatient(
+    public List<MedicalRecordDTO> getMedicalRecordsByPatient(
             @PathVariable Long patientId) {
 
-        return medicalRecordService
-                .getMedicalRecordsByPatient(patientId);
+        return medicalRecordService.convertToDTO(
+                medicalRecordService.getMedicalRecordsByPatient(patientId)
+        );
     }
 
     @PutMapping("/{id}")
-    public MedicalRecord updateMedicalRecord(
+    public MedicalRecordDTO updateMedicalRecord(
             @PathVariable Long id,
             @RequestBody MedicalRecord medicalRecord) {
 
-        return medicalRecordService.updateMedicalRecord(
-                id,
-                medicalRecord
+        return medicalRecordService.convertToDTO(
+                medicalRecordService.updateMedicalRecord(
+                        id,
+                        medicalRecord
+                )
         );
     }
 
