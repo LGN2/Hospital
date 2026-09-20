@@ -106,4 +106,17 @@ public class MedicalRecordService {
                 .map(this::convertToDTO)
                 .toList();
     }
+
+    public List<MedicalRecordDTO> getPatientMedicalRecords(
+            Long patientId) {
+
+        patientRepository.findByIdAndIsActiveTrue(patientId)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
+
+        return convertToDTO(
+                medicalRecordRepository
+                        .findAllActiveMedicalRecordsForPatient(patientId)
+        );
+    }
 }
