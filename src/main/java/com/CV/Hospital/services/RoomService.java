@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.RoomDTO;
 import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.entities.Room;
 import com.CV.Hospital.repositories.HospitalRepository;
@@ -71,5 +72,26 @@ public class RoomService {
         Room room = getRoomById(id);
         room.setIsActive(false);
         roomRepository.save(room);
+    }
+
+    public RoomDTO convertToDTO(Room room) {
+        return RoomDTO.builder()
+                .id(room.getId())
+                .roomNumber(room.getRoomNumber())
+                .floor(room.getFloor())
+                .type(room.getType())
+                .capacity(room.getCapacity())
+                .hospitalId(
+                        room.getHospital() != null
+                                ? room.getHospital().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<RoomDTO> convertToDTO(List<Room> rooms) {
+        return rooms.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
