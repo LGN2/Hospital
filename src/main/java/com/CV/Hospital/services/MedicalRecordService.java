@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.MedicalRecordDTO;
 import com.CV.Hospital.entities.MedicalRecord;
 import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.repositories.MedicalRecordRepository;
@@ -64,6 +65,30 @@ public class MedicalRecordService {
         MedicalRecord record = getMedicalRecordById(id);
         record.setIsActive(false);
         medicalRecordRepository.save(record);
+    }
+
+    public MedicalRecordDTO convertToDTO(
+            MedicalRecord medicalRecord) {
+
+        return MedicalRecordDTO.builder()
+                .id(medicalRecord.getId())
+                .diagnosis(medicalRecord.getDiagnosis())
+                .notes(medicalRecord.getNotes())
+                .recordDate(medicalRecord.getRecordDate())
+                .patientId(
+                        medicalRecord.getPatient() != null
+                                ? medicalRecord.getPatient().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<MedicalRecordDTO> convertToDTO(
+            List<MedicalRecord> medicalRecords) {
+
+        return medicalRecords.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
 }
