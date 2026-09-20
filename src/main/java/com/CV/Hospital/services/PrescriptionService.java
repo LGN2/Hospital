@@ -17,73 +17,88 @@ public class PrescriptionService {
     private final PrescriptionRepository prescriptionRepository;
     private final MedicalRecordRepository medicalRecordRepository;
 
-    public Prescription addPrescription(
-            Prescription prescription,
-            Long medicalRecordId) {
-        MedicalRecord medicalRecord =
-                medicalRecordRepository
-                        .findByIdAndIsActiveTrue(medicalRecordId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Medical record not found"));
-        prescription.setMedicalRecord(medicalRecord);
-        prescription.setIsActive(true);
-        return prescriptionRepository.save(prescription);
-    }
+    public PrescriptionDTO addPrescription(PrescriptionDTO dto) {
 
-    public List<Prescription> getAllPrescriptions() {
-        return prescriptionRepository.findByIsActiveTrue();
-    }
-
-    public Prescription getPrescriptionById(Long id) {
-        return prescriptionRepository.findByIdAndIsActiveTrue(id)
+        MedicalRecord record = medicalRecordRepository
+                .findByIdAndIsActiveTrue(dto.getMedicalRecordId())
                 .orElseThrow(() ->
-                        new RuntimeException("Prescription not found"));
+                        new RuntimeException("Medical record not found"));
+
+        Prescription prescription = new Prescription();
+
+        prescription.setMedicineName(dto.getMedicineName());
+        prescription.setDosage(dto.getDosage());
+        prescription.setDurationDays(dto.getDurationDays());
+        prescription.setMedicalRecord(record);
+
+        return convertToDTO(
+                prescriptionRepository.save(prescription)
+        );
     }
 
-    public List<Prescription> getPrescriptionsByMedicalRecord(
+    public List<PrescriptionDTO> getAllPrescriptions() {
+        return convertToDTO(
+                prescriptionRepository.findByIsActiveTrue()
+        );
+    }
+
+    public PrescriptionDTO getPrescriptionById(Long id) {
+        return convertToDTO(findActivePrescription(id));
+    }
+
+    public List<PrescriptionDTO> getPrescriptionsByMedicalRecord(
             Long medicalRecordId) {
-        return prescriptionRepository
-                .findByMedicalRecordIdAndIsActiveTrue(medicalRecordId);
+
+        return convertToDTO(
+                prescriptionRepository
+                        .findByMedicalRecordIdAndIsActiveTrue(
+                                medicalRecordId
+                        )
+        );
     }
 
-    public Prescription updatePrescription(
+    public PrescriptionDTO updatePrescription(
             Long id,
-            Prescription updatedPrescription) {
-        Prescription prescription = getPrescriptionById(id);
-        if (updatedPrescription.getMedicineName() != null) {
-            prescription.setMedicineName(
-                    updatedPrescription.getMedicineName()
-            );
-        }
-        if (updatedPrescription.getDosage() != null) {
-            prescription.setDosage(updatedPrescription.getDosage());
-        }
-        if (updatedPrescription.getDurationDays() != null) {
-            prescription.setDurationDays(
-                    updatedPrescription.getDurationDays()
-            );
-        }
-        return prescriptionRepository.save(prescription);
+            PrescriptionDTO dto) {
+
+        Prescription prescription = findActivePrescription(id);
+
+        MedicalRecord record = medicalRecordRepository
+                .findByIdAndIsActiveTrue(dto.getMedicalRecordId())
+                .orElseThrow(() ->
+                        new RuntimeException("Medical record not found"));
+
+        prescription.setMedicineName(dto.getMedicineName());
+        prescription.setDosage(dto.getDosage());
+        prescription.setDurationDays(dto.getDurationDays());
+        prescription.setMedicalRecord(record);
+
+        return convertToDTO(
+                prescriptionRepository.save(prescription)
+        );
     }
 
     public void deletePrescription(Long id) {
-        Prescription prescription = getPrescriptionById(id);
+        Prescription prescription = findActivePrescription(id);
         prescription.setIsActive(false);
         prescriptionRepository.save(prescription);
     }
 
-    public PrescriptionDTO convertToDTO(
-            Prescription prescription) {
+    private Prescription findActivePrescription(Long id) {
+        return prescriptionRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Prescription not found"));
+    }
 
+    public PrescriptionDTO convertToDTO(Prescription prescription) {
         return PrescriptionDTO.builder()
                 .id(prescription.getId())
                 .medicineName(prescription.getMedicineName())
                 .dosage(prescription.getDosage())
                 .durationDays(prescription.getDurationDays())
                 .medicalRecordId(
-                        prescription.getMedicalRecord() != null
-                                ? prescription.getMedicalRecord().getId()
-                                : null
+                        prescription.getMedicalRecord().getId()
                 )
                 .build();
     }
