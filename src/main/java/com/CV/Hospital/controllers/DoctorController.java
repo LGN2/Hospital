@@ -4,6 +4,7 @@ import com.CV.Hospital.dto.DoctorDTO;
 import com.CV.Hospital.services.DoctorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public DoctorDTO addDoctor(
             @Valid @RequestBody DoctorDTO dto) {
         return doctorService.addDoctor(dto);
@@ -51,6 +53,7 @@ public class DoctorController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDoctor(@PathVariable Long id) {
         doctorService.deleteDoctor(id);
     }
