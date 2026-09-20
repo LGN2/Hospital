@@ -17,78 +17,93 @@ public class MedicalRecordService {
     private final MedicalRecordRepository medicalRecordRepository;
     private final PatientRepository patientRepository;
 
-    public MedicalRecord addMedicalRecord(
-            MedicalRecord medicalRecord,
-            Long patientId) {
-        Patient patient =
-                patientRepository.findByIdAndIsActiveTrue(patientId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Patient not found"));
+    public MedicalRecordDTO addMedicalRecord(MedicalRecordDTO dto) {
 
-        medicalRecord.setPatient(patient);
-        medicalRecord.setIsActive(true);
-        return medicalRecordRepository.save(medicalRecord);
-    }
-
-    public List<MedicalRecord> getAllMedicalRecords() {
-        return medicalRecordRepository.findByIsActiveTrue();
-    }
-
-    public MedicalRecord getMedicalRecordById(Long id) {
-        return medicalRecordRepository.findByIdAndIsActiveTrue(id)
+        Patient patient = patientRepository
+                .findByIdAndIsActiveTrue(dto.getPatientId())
                 .orElseThrow(() ->
-                        new RuntimeException("Medical record not found"));
+                        new RuntimeException("Patient not found"));
+
+        MedicalRecord record = new MedicalRecord();
+
+        record.setDiagnosis(dto.getDiagnosis());
+        record.setNotes(dto.getNotes());
+        record.setRecordDate(dto.getRecordDate());
+        record.setPatient(patient);
+
+        return convertToDTO(
+                medicalRecordRepository.save(record)
+        );
     }
 
-    public List<MedicalRecord> getMedicalRecordsByPatient(Long patientId) {
-        return medicalRecordRepository
-                .findByPatientIdAndIsActiveTrue(patientId);
+    public List<MedicalRecordDTO> getAllMedicalRecords() {
+        return convertToDTO(
+                medicalRecordRepository.findByIsActiveTrue()
+        );
     }
 
-    public MedicalRecord updateMedicalRecord(
+    public MedicalRecordDTO getMedicalRecordById(Long id) {
+        return convertToDTO(findActiveMedicalRecord(id));
+    }
+
+    public List<MedicalRecordDTO> getMedicalRecordsByPatient(
+            Long patientId) {
+
+        return convertToDTO(
+                medicalRecordRepository
+                        .findByPatientIdAndIsActiveTrue(patientId)
+        );
+    }
+
+    public MedicalRecordDTO updateMedicalRecord(
             Long id,
-            MedicalRecord updatedRecord) {
-        MedicalRecord record = getMedicalRecordById(id);
-        if (updatedRecord.getDiagnosis() != null) {
-            record.setDiagnosis(updatedRecord.getDiagnosis());
-        }
-        if (updatedRecord.getNotes() != null) {
-            record.setNotes(updatedRecord.getNotes());
-        }
-        if (updatedRecord.getRecordDate() != null) {
-            record.setRecordDate(updatedRecord.getRecordDate());
-        }
-        return medicalRecordRepository.save(record);
+            MedicalRecordDTO dto) {
+
+        MedicalRecord record = findActiveMedicalRecord(id);
+
+        Patient patient = patientRepository
+                .findByIdAndIsActiveTrue(dto.getPatientId())
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
+
+        record.setDiagnosis(dto.getDiagnosis());
+        record.setNotes(dto.getNotes());
+        record.setRecordDate(dto.getRecordDate());
+        record.setPatient(patient);
+
+        return convertToDTO(
+                medicalRecordRepository.save(record)
+        );
     }
 
     public void deleteMedicalRecord(Long id) {
-        MedicalRecord record = getMedicalRecordById(id);
+        MedicalRecord record = findActiveMedicalRecord(id);
         record.setIsActive(false);
         medicalRecordRepository.save(record);
     }
 
-    public MedicalRecordDTO convertToDTO(
-            MedicalRecord medicalRecord) {
+    private MedicalRecord findActiveMedicalRecord(Long id) {
+        return medicalRecordRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Medical record not found"));
+    }
 
+    public MedicalRecordDTO convertToDTO(MedicalRecord record) {
         return MedicalRecordDTO.builder()
-                .id(medicalRecord.getId())
-                .diagnosis(medicalRecord.getDiagnosis())
-                .notes(medicalRecord.getNotes())
-                .recordDate(medicalRecord.getRecordDate())
-                .patientId(
-                        medicalRecord.getPatient() != null
-                                ? medicalRecord.getPatient().getId()
-                                : null
-                )
+                .id(record.getId())
+                .diagnosis(record.getDiagnosis())
+                .notes(record.getNotes())
+                .recordDate(record.getRecordDate())
+                .patientId(record.getPatient().getId())
                 .build();
     }
 
     public List<MedicalRecordDTO> convertToDTO(
-            List<MedicalRecord> medicalRecords) {
+            List<MedicalRecord> records) {
 
-        return medicalRecords.stream()
+        return records.stream()
                 .map(this::convertToDTO)
                 .toList();
     }
-
 }
