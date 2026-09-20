@@ -4,6 +4,7 @@ import com.CV.Hospital.dto.StaffDTO;
 import com.CV.Hospital.services.StaffService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class StaffController {
     private final StaffService staffService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public StaffDTO addStaff(
             @Valid @RequestBody StaffDTO dto) {
         return staffService.addStaff(dto);
@@ -45,6 +47,7 @@ public class StaffController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStaff(@PathVariable Long id) {
         staffService.deleteStaff(id);
     }
