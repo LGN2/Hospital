@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.MedicalRecordDTO;
 import com.CV.Hospital.entities.MedicalRecord;
 import com.CV.Hospital.entities.Patient;
@@ -22,7 +23,7 @@ public class MedicalRecordService {
         Patient patient = patientRepository
                 .findByIdAndIsActiveTrue(dto.getPatientId())
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
 
         MedicalRecord record = new MedicalRecord();
 
@@ -64,7 +65,7 @@ public class MedicalRecordService {
         Patient patient = patientRepository
                 .findByIdAndIsActiveTrue(dto.getPatientId())
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
 
         record.setDiagnosis(dto.getDiagnosis());
         record.setNotes(dto.getNotes());
@@ -86,7 +87,7 @@ public class MedicalRecordService {
         return medicalRecordRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Medical record not found"));
+                        new ResourceNotFoundException("Medical record not found"));
     }
 
     public MedicalRecordDTO convertToDTO(MedicalRecord record) {
@@ -112,7 +113,7 @@ public class MedicalRecordService {
 
         patientRepository.findByIdAndIsActiveTrue(patientId)
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
 
         return convertToDTO(
                 medicalRecordRepository
