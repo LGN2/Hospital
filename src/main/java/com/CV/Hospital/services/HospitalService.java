@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.HospitalDTO;
 import com.CV.Hospital.dto.HospitalStatisticsDTO;
 import com.CV.Hospital.entities.Hospital;
@@ -55,7 +56,7 @@ public class HospitalService {
     private Hospital findActiveHospital(Long id) {
         return hospitalRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Hospital not found"));
+                        new ResourceNotFoundException("Hospital not found"));
     }
 
     public HospitalDTO convertToDTO(Hospital hospital) {
