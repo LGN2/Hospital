@@ -13,62 +13,42 @@ import java.util.List;
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
-    //Create
-    public Hospital addHospital(Hospital hospital) {
-        if (hospital == null) {
-            throw new IllegalArgumentException("Hospital cannot be null");
-        }
-        if (hospital.getName() == null || hospital.getName().isBlank()) {
-            throw new IllegalArgumentException("Hospital name is required");
-        }
-        if (hospital.getLocation() == null || hospital.getLocation().isBlank()) {
-            throw new IllegalArgumentException("Hospital location is required");
-        }
-        hospital.setIsActive(true);
-        return hospitalRepository.save(hospital);
+
+    public HospitalDTO addHospital(HospitalDTO dto) {
+        Hospital hospital = new Hospital();
+        hospital.setName(dto.getName());
+        hospital.setLocation(dto.getLocation());
+
+        return convertToDTO(hospitalRepository.save(hospital));
     }
 
-
-    //Get All
-    public List<Hospital> getAllHospitals() {
-        return hospitalRepository.findByIsActiveTrue();
+    public List<HospitalDTO> getAllHospitals() {
+        return convertToDTO(hospitalRepository.findByIsActiveTrue());
     }
 
-
-    //Get By ID
-    public Hospital getHospitalById(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Hospital ID cannot be null");
-        }
-        return hospitalRepository
-                .findByIdAndIsActiveTrue(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Hospital not found with ID: " + id));
+    public HospitalDTO getHospitalById(Long id) {
+        return convertToDTO(findActiveHospital(id));
     }
 
+    public HospitalDTO updateHospital(Long id, HospitalDTO dto) {
+        Hospital hospital = findActiveHospital(id);
 
-    //Update
-    public Hospital updateHospital(Long id, Hospital updatedHospital) {
-        if (updatedHospital == null) {
-            throw new IllegalArgumentException("Hospital cannot be null");
-        }
-        Hospital existingHospital = getHospitalById(id);
-        if (updatedHospital.getName() != null
-                && !updatedHospital.getName().isBlank()) {
-            existingHospital.setName(updatedHospital.getName());
-        }
-        if (updatedHospital.getLocation() != null
-                && !updatedHospital.getLocation().isBlank()) {
-            existingHospital.setLocation(updatedHospital.getLocation());
-        }
-        return hospitalRepository.save(existingHospital);
+        hospital.setName(dto.getName());
+        hospital.setLocation(dto.getLocation());
+
+        return convertToDTO(hospitalRepository.save(hospital));
     }
 
-    //Delete
     public void deleteHospital(Long id) {
-        Hospital hospital = getHospitalById(id);
+        Hospital hospital = findActiveHospital(id);
         hospital.setIsActive(false);
         hospitalRepository.save(hospital);
+    }
+
+    private Hospital findActiveHospital(Long id) {
+        return hospitalRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Hospital not found"));
     }
 
     public HospitalDTO convertToDTO(Hospital hospital) {
