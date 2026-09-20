@@ -4,6 +4,7 @@ import com.CV.Hospital.dto.RoomDTO;
 import com.CV.Hospital.services.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public RoomDTO addRoom(
             @Valid @RequestBody RoomDTO dto) {
         return roomService.addRoom(dto);
@@ -45,6 +47,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRoom(@PathVariable Long id) {
         roomService.deleteRoom(id);
     }
