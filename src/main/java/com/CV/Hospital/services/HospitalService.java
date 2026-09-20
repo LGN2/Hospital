@@ -1,6 +1,7 @@
 package com.CV.Hospital.services;
 
 import com.CV.Hospital.exceptions.ResourceNotFoundException;
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.HospitalDTO;
 import com.CV.Hospital.dto.HospitalStatisticsDTO;
 import com.CV.Hospital.entities.Hospital;
