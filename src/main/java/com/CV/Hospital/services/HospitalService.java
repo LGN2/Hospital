@@ -1,6 +1,7 @@
 package com.CV.Hospital.services;
 
 import com.CV.Hospital.dto.HospitalDTO;
+import com.CV.Hospital.dto.HospitalStatisticsDTO;
 import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.repositories.DepartmentRepository;
 import com.CV.Hospital.repositories.DoctorRepository;
@@ -69,5 +70,31 @@ public class HospitalService {
         return hospitals.stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public HospitalStatisticsDTO getHospitalStatistics(
+            Long hospitalId) {
+
+        Hospital hospital = findActiveHospital(hospitalId);
+
+        Long departments =
+                departmentRepository
+                        .countActiveDepartmentsByHospital(hospitalId);
+
+        Long doctors =
+                doctorRepository
+                        .countActiveDoctorsByHospital(hospitalId);
+
+        Long patients =
+                patientRepository
+                        .countActivePatientsByHospital(hospitalId);
+
+        return HospitalStatisticsDTO.builder()
+                .hospitalId(hospital.getId())
+                .hospitalName(hospital.getName())
+                .activeDepartments(departments)
+                .activeDoctors(doctors)
+                .activePatients(patients)
+                .build();
     }
 }
