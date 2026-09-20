@@ -17,53 +17,72 @@ public class StaffService {
     private final StaffRepository staffRepository;
     private final DepartmentRepository departmentRepository;
 
-    public Staff addStaff(
-            Staff staff,
-            Long departmentId) {
+    public StaffDTO addStaff(StaffDTO dto) {
+
         Department department =
-                departmentRepository.findByIdAndIsActiveTrue(departmentId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Department not found"));
+                getDepartment(dto.getDepartmentId());
+
+        Staff staff = new Staff();
+
+        staff.setName(dto.getName());
+        staff.setRole(dto.getRole());
+        staff.setPhoneNumber(dto.getPhoneNumber());
         staff.setDepartment(department);
-        staff.setIsActive(true);
-        return staffRepository.save(staff);
+
+        return convertToDTO(staffRepository.save(staff));
     }
 
-    public List<Staff> getAllStaff() {
-        return staffRepository.findByIsActiveTrue();
+    public List<StaffDTO> getAllStaff() {
+        return convertToDTO(
+                staffRepository.findByIsActiveTrue()
+        );
     }
 
-    public Staff getStaffById(Long id) {
+    public StaffDTO getStaffById(Long id) {
+        return convertToDTO(findActiveStaff(id));
+    }
+
+    public List<StaffDTO> getStaffByDepartment(
+            Long departmentId) {
+
+        return convertToDTO(
+                staffRepository
+                        .findByDepartmentIdAndIsActiveTrue(departmentId)
+        );
+    }
+
+    public StaffDTO updateStaff(Long id, StaffDTO dto) {
+
+        Staff staff = findActiveStaff(id);
+
+        Department department =
+                getDepartment(dto.getDepartmentId());
+
+        staff.setName(dto.getName());
+        staff.setRole(dto.getRole());
+        staff.setPhoneNumber(dto.getPhoneNumber());
+        staff.setDepartment(department);
+
+        return convertToDTO(staffRepository.save(staff));
+    }
+
+    public void deleteStaff(Long id) {
+        Staff staff = findActiveStaff(id);
+        staff.setIsActive(false);
+        staffRepository.save(staff);
+    }
+
+    private Staff findActiveStaff(Long id) {
         return staffRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
                         new RuntimeException("Staff not found"));
     }
 
-    public List<Staff> getStaffByDepartment(Long departmentId) {
-        return staffRepository
-                .findByDepartmentIdAndIsActiveTrue(departmentId);
-    }
-
-    public Staff updateStaff(
-            Long id,
-            Staff updatedStaff) {
-        Staff staff = getStaffById(id);
-        if (updatedStaff.getName() != null) {
-            staff.setName(updatedStaff.getName());
-        }
-        if (updatedStaff.getRole() != null) {
-            staff.setRole(updatedStaff.getRole());
-        }
-        if (updatedStaff.getPhoneNumber() != null) {
-            staff.setPhoneNumber(updatedStaff.getPhoneNumber());
-        }
-        return staffRepository.save(staff);
-    }
-
-    public void deleteStaff(Long id) {
-        Staff staff = getStaffById(id);
-        staff.setIsActive(false);
-        staffRepository.save(staff);
+    private Department getDepartment(Long id) {
+        return departmentRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Department not found"));
     }
 
     public StaffDTO convertToDTO(Staff staff) {
@@ -72,11 +91,7 @@ public class StaffService {
                 .name(staff.getName())
                 .role(staff.getRole())
                 .phoneNumber(staff.getPhoneNumber())
-                .departmentId(
-                        staff.getDepartment() != null
-                                ? staff.getDepartment().getId()
-                                : null
-                )
+                .departmentId(staff.getDepartment().getId())
                 .build();
     }
 
