@@ -18,6 +18,7 @@ public class RoomController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public RoomDTO addRoom(
             @Valid @RequestBody RoomDTO dto) {
         return roomService.addRoom(dto);
@@ -47,6 +48,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRoom(@PathVariable Long id) {
         roomService.deleteRoom(id);
