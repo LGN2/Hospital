@@ -4,6 +4,7 @@ import com.CV.Hospital.dto.BillDTO;
 import com.CV.Hospital.services.BillService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ public class BillController {
     private final BillService billService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public BillDTO addBill(
             @Valid @RequestBody BillDTO dto) {
         return billService.addBill(dto);
@@ -57,6 +59,7 @@ public class BillController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBill(@PathVariable Long id) {
         billService.deleteBill(id);
     }
