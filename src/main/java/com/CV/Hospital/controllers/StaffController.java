@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.StaffDTO;
 import com.CV.Hospital.entities.Staff;
 import com.CV.Hospital.services.StaffService;
 import lombok.RequiredArgsConstructor;
@@ -15,36 +16,46 @@ public class StaffController {
     private final StaffService staffService;
 
     @PostMapping
-    public Staff addStaff(
+    public StaffDTO addStaff(
             @RequestBody Staff staff,
             @RequestParam Long departmentId) {
 
-        return staffService.addStaff(staff, departmentId);
+        return staffService.convertToDTO(
+                staffService.addStaff(staff, departmentId)
+        );
     }
 
     @GetMapping
-    public List<Staff> getAllStaff() {
-        return staffService.getAllStaff();
+    public List<StaffDTO> getAllStaff() {
+        return staffService.convertToDTO(
+                staffService.getAllStaff()
+        );
     }
 
     @GetMapping("/{id}")
-    public Staff getStaffById(@PathVariable Long id) {
-        return staffService.getStaffById(id);
+    public StaffDTO getStaffById(@PathVariable Long id) {
+        return staffService.convertToDTO(
+                staffService.getStaffById(id)
+        );
     }
 
     @GetMapping("/department/{departmentId}")
-    public List<Staff> getStaffByDepartment(
+    public List<StaffDTO> getStaffByDepartment(
             @PathVariable Long departmentId) {
 
-        return staffService.getStaffByDepartment(departmentId);
+        return staffService.convertToDTO(
+                staffService.getStaffByDepartment(departmentId)
+        );
     }
 
     @PutMapping("/{id}")
-    public Staff updateStaff(
+    public StaffDTO updateStaff(
             @PathVariable Long id,
             @RequestBody Staff staff) {
 
-        return staffService.updateStaff(id, staff);
+        return staffService.convertToDTO(
+                staffService.updateStaff(id, staff)
+        );
     }
 
     @DeleteMapping("/{id}")
