@@ -10,6 +10,7 @@ import com.CV.Hospital.repositories.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -143,5 +144,36 @@ public class AppointmentService {
         return appointments.stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public List<AppointmentDTO> getDoctorAppointmentsByDate(
+            Long doctorId,
+            LocalDate date) {
+
+        doctorRepository.findByIdAndIsActiveTrue(doctorId)
+                .orElseThrow(() ->
+                        new RuntimeException("Doctor not found"));
+
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = date.plusDays(1).atStartOfDay();
+
+        return convertToDTO(
+                appointmentRepository
+                        .findActiveAppointmentsForDoctorOnDate(
+                                doctorId,
+                                startDate,
+                                endDate
+                        )
+        );
+    }
+
+    public Long getTotalAppointmentsForDoctor(Long doctorId) {
+
+        doctorRepository.findByIdAndIsActiveTrue(doctorId)
+                .orElseThrow(() ->
+                        new RuntimeException("Doctor not found"));
+
+        return appointmentRepository
+                .countActiveAppointmentsByDoctor(doctorId);
     }
 }
