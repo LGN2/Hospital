@@ -2,7 +2,10 @@ package com.CV.Hospital.services;
 
 import com.CV.Hospital.dto.HospitalDTO;
 import com.CV.Hospital.entities.Hospital;
+import com.CV.Hospital.repositories.DepartmentRepository;
+import com.CV.Hospital.repositories.DoctorRepository;
 import com.CV.Hospital.repositories.HospitalRepository;
+import com.CV.Hospital.repositories.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ import java.util.List;
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
+    private final DepartmentRepository departmentRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
 
     public HospitalDTO addHospital(HospitalDTO dto) {
         Hospital hospital = new Hospital();
