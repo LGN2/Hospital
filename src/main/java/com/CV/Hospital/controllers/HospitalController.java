@@ -1,6 +1,7 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.HospitalDTO;
+import com.CV.Hospital.dto.HospitalStatisticsDTO;
 import com.CV.Hospital.services.HospitalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,13 @@ public class HospitalController {
     @DeleteMapping("/{id}")
     public void deleteHospital(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
+    }
+
+    @GetMapping("/{hospitalId}/statistics")
+    public HospitalStatisticsDTO getHospitalStatistics(
+            @PathVariable Long hospitalId) {
+
+        return hospitalService
+                .getHospitalStatistics(hospitalId);
     }
 }
