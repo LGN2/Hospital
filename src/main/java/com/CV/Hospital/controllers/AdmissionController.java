@@ -61,4 +61,12 @@ public class AdmissionController {
     public void deleteAdmission(@PathVariable Long id) {
         admissionService.deleteAdmission(id);
     }
+
+    @GetMapping("/floor/{floor}")
+    public List<AdmissionDTO> getPatientsAdmittedToFloor(
+            @PathVariable Integer floor) {
+
+        return admissionService
+                .getPatientsAdmittedToFloor(floor);
+    }
 }
