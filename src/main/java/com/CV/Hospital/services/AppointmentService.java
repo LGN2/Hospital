@@ -1,5 +1,7 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.BadRequestException;
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.AppointmentDTO;
 import com.CV.Hospital.entities.Appointment;
 import com.CV.Hospital.entities.Doctor;
@@ -27,12 +29,12 @@ public class AppointmentService {
         Doctor doctor = doctorRepository
                 .findByIdAndIsActiveTrue(dto.getDoctorId())
                 .orElseThrow(() ->
-                        new RuntimeException("Doctor not found"));
+                        new ResourceNotFoundException("Doctor not found"));
 
         Patient patient = patientRepository
                 .findByIdAndIsActiveTrue(dto.getPatientId())
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
 
         validateDate(dto.getAppointmentDate());
 
@@ -88,12 +90,12 @@ public class AppointmentService {
         Doctor doctor = doctorRepository
                 .findByIdAndIsActiveTrue(dto.getDoctorId())
                 .orElseThrow(() ->
-                        new RuntimeException("Doctor not found"));
+                        new ResourceNotFoundException("Doctor not found"));
 
         Patient patient = patientRepository
                 .findByIdAndIsActiveTrue(dto.getPatientId())
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
 
         appointment.setAppointmentDate(dto.getAppointmentDate());
         appointment.setReason(dto.getReason());
@@ -116,12 +118,12 @@ public class AppointmentService {
         return appointmentRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Appointment not found"));
+                        new ResourceNotFoundException("Appointment not found"));
     }
 
     private void validateDate(LocalDateTime date) {
         if (date == null || !date.isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Appointment date must be in the future"
             );
         }
@@ -152,7 +154,7 @@ public class AppointmentService {
 
         doctorRepository.findByIdAndIsActiveTrue(doctorId)
                 .orElseThrow(() ->
-                        new RuntimeException("Doctor not found"));
+                        new ResourceNotFoundException("Doctor not found"));
 
         LocalDateTime startDate = date.atStartOfDay();
         LocalDateTime endDate = date.plusDays(1).atStartOfDay();
@@ -171,7 +173,7 @@ public class AppointmentService {
 
         doctorRepository.findByIdAndIsActiveTrue(doctorId)
                 .orElseThrow(() ->
-                        new RuntimeException("Doctor not found"));
+                        new ResourceNotFoundException("Doctor not found"));
 
         return appointmentRepository
                 .countActiveAppointmentsByDoctor(doctorId);
