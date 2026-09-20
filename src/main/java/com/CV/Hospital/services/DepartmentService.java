@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.DepartmentDTO;
 import com.CV.Hospital.entities.Department;
 import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.repositories.DepartmentRepository;
@@ -60,5 +61,24 @@ public class DepartmentService {
         Department department = getDepartmentById(id);
         department.setIsActive(false);
         departmentRepository.save(department);
+    }
+
+    public DepartmentDTO convertToDTO(Department department) {
+        return DepartmentDTO.builder()
+                .id(department.getId())
+                .name(department.getName())
+                .description(department.getDescription())
+                .hospitalId(
+                        department.getHospital() != null
+                                ? department.getHospital().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<DepartmentDTO> convertToDTO(List<Department> departments) {
+        return departments.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
