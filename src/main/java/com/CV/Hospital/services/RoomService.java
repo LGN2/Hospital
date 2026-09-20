@@ -17,61 +17,67 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final HospitalRepository hospitalRepository;
 
-    public Room addRoom(Room room, Long hospitalId) {
-        Hospital hospital =
-                hospitalRepository.findByIdAndIsActiveTrue(hospitalId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Hospital not found"));
-        if (room.getCapacity() == null || room.getCapacity() <= 0) {
-            throw new IllegalArgumentException(
-                    "Room capacity must be greater than zero"
-            );
-        }
-        room.setHospital(hospital);
-        room.setIsActive(true);
-        return roomRepository.save(room);
-    }
+    public RoomDTO addRoom(RoomDTO dto) {
 
-    public List<Room> getAllRooms() {
-        return roomRepository.findByIsActiveTrue();
-    }
-
-    public Room getRoomById(Long id) {
-        return roomRepository.findByIdAndIsActiveTrue(id)
+        Hospital hospital = hospitalRepository
+                .findByIdAndIsActiveTrue(dto.getHospitalId())
                 .orElseThrow(() ->
-                        new RuntimeException("Room not found"));
+                        new RuntimeException("Hospital not found"));
+
+        Room room = new Room();
+
+        room.setRoomNumber(dto.getRoomNumber());
+        room.setFloor(dto.getFloor());
+        room.setType(dto.getType());
+        room.setCapacity(dto.getCapacity());
+        room.setHospital(hospital);
+
+        return convertToDTO(roomRepository.save(room));
     }
 
-    public List<Room> getRoomsByHospital(Long hospitalId) {
-        return roomRepository.findByHospitalIdAndIsActiveTrue(hospitalId);
+    public List<RoomDTO> getAllRooms() {
+        return convertToDTO(roomRepository.findByIsActiveTrue());
     }
 
-    public Room updateRoom(Long id, Room updatedRoom) {
-        Room room = getRoomById(id);
-        if (updatedRoom.getRoomNumber() != null) {
-            room.setRoomNumber(updatedRoom.getRoomNumber());
-        }
-        if (updatedRoom.getFloor() != null) {
-            room.setFloor(updatedRoom.getFloor());
-        }
-        if (updatedRoom.getType() != null) {
-            room.setType(updatedRoom.getType());
-        }
-        if (updatedRoom.getCapacity() != null) {
-            if (updatedRoom.getCapacity() <= 0) {
-                throw new IllegalArgumentException(
-                        "Room capacity must be greater than zero"
-                );
-            }
-            room.setCapacity(updatedRoom.getCapacity());
-        }
-        return roomRepository.save(room);
+    public RoomDTO getRoomById(Long id) {
+        return convertToDTO(findActiveRoom(id));
+    }
+
+    public List<RoomDTO> getRoomsByHospital(Long hospitalId) {
+        return convertToDTO(
+                roomRepository
+                        .findByHospitalIdAndIsActiveTrue(hospitalId)
+        );
+    }
+
+    public RoomDTO updateRoom(Long id, RoomDTO dto) {
+
+        Room room = findActiveRoom(id);
+
+        Hospital hospital = hospitalRepository
+                .findByIdAndIsActiveTrue(dto.getHospitalId())
+                .orElseThrow(() ->
+                        new RuntimeException("Hospital not found"));
+
+        room.setRoomNumber(dto.getRoomNumber());
+        room.setFloor(dto.getFloor());
+        room.setType(dto.getType());
+        room.setCapacity(dto.getCapacity());
+        room.setHospital(hospital);
+
+        return convertToDTO(roomRepository.save(room));
     }
 
     public void deleteRoom(Long id) {
-        Room room = getRoomById(id);
+        Room room = findActiveRoom(id);
         room.setIsActive(false);
         roomRepository.save(room);
+    }
+
+    private Room findActiveRoom(Long id) {
+        return roomRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found"));
     }
 
     public RoomDTO convertToDTO(Room room) {
@@ -81,11 +87,7 @@ public class RoomService {
                 .floor(room.getFloor())
                 .type(room.getType())
                 .capacity(room.getCapacity())
-                .hospitalId(
-                        room.getHospital() != null
-                                ? room.getHospital().getId()
-                                : null
-                )
+                .hospitalId(room.getHospital().getId())
                 .build();
     }
 
