@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.AdmissionDTO;
 import com.CV.Hospital.entities.Admission;
 import com.CV.Hospital.services.AdmissionService;
 import lombok.RequiredArgsConstructor;
@@ -15,58 +16,71 @@ public class AdmissionController {
     private final AdmissionService admissionService;
 
     @PostMapping
-    public Admission admitPatient(
+    public AdmissionDTO admitPatient(
             @RequestBody Admission admission,
             @RequestParam Long patientId,
             @RequestParam Long roomId) {
 
-        return admissionService.admitPatient(
-                admission,
-                patientId,
-                roomId
+        return admissionService.convertToDTO(
+                admissionService.admitPatient(
+                        admission,
+                        patientId,
+                        roomId
+                )
         );
     }
 
     @GetMapping
-    public List<Admission> getAllAdmissions() {
-        return admissionService.getAllAdmissions();
+    public List<AdmissionDTO> getAllAdmissions() {
+        return admissionService.convertToDTO(
+                admissionService.getAllAdmissions()
+        );
     }
 
     @GetMapping("/{id}")
-    public Admission getAdmissionById(@PathVariable Long id) {
-        return admissionService.getAdmissionById(id);
+    public AdmissionDTO getAdmissionById(@PathVariable Long id) {
+        return admissionService.convertToDTO(
+                admissionService.getAdmissionById(id)
+        );
     }
 
     @GetMapping("/patient/{patientId}")
-    public List<Admission> getAdmissionsByPatient(
+    public List<AdmissionDTO> getAdmissionsByPatient(
             @PathVariable Long patientId) {
 
-        return admissionService.getAdmissionsByPatient(patientId);
+        return admissionService.convertToDTO(
+                admissionService.getAdmissionsByPatient(patientId)
+        );
     }
 
     @GetMapping("/room/{roomId}")
-    public List<Admission> getAdmissionsByRoom(
+    public List<AdmissionDTO> getAdmissionsByRoom(
             @PathVariable Long roomId) {
 
-        return admissionService.getAdmissionsByRoom(roomId);
+        return admissionService.convertToDTO(
+                admissionService.getAdmissionsByRoom(roomId)
+        );
     }
 
     @PutMapping("/{id}")
-    public Admission updateAdmission(
+    public AdmissionDTO updateAdmission(
             @PathVariable Long id,
             @RequestBody Admission admission) {
 
-        return admissionService.updateAdmission(id, admission);
+        return admissionService.convertToDTO(
+                admissionService.updateAdmission(id, admission)
+        );
     }
 
     @PutMapping("/{id}/discharge")
-    public Admission dischargePatient(@PathVariable Long id) {
-        return admissionService.dischargePatient(id);
+    public AdmissionDTO dischargePatient(@PathVariable Long id) {
+        return admissionService.convertToDTO(
+                admissionService.dischargePatient(id)
+        );
     }
 
     @DeleteMapping("/{id}")
     public void deleteAdmission(@PathVariable Long id) {
         admissionService.deleteAdmission(id);
     }
-
 }
