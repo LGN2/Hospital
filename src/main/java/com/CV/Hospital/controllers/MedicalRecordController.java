@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.MedicalRecordDTO;
-import com.CV.Hospital.entities.MedicalRecord;
 import com.CV.Hospital.services.MedicalRecordService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,53 +17,33 @@ public class MedicalRecordController {
 
     @PostMapping
     public MedicalRecordDTO addMedicalRecord(
-            @RequestBody MedicalRecord medicalRecord,
-            @RequestParam Long patientId) {
-
-        return medicalRecordService.convertToDTO(
-                medicalRecordService.addMedicalRecord(
-                        medicalRecord,
-                        patientId
-                )
-        );
+            @Valid @RequestBody MedicalRecordDTO dto) {
+        return medicalRecordService.addMedicalRecord(dto);
     }
 
     @GetMapping
     public List<MedicalRecordDTO> getAllMedicalRecords() {
-        return medicalRecordService.convertToDTO(
-                medicalRecordService.getAllMedicalRecords()
-        );
+        return medicalRecordService.getAllMedicalRecords();
     }
 
     @GetMapping("/{id}")
     public MedicalRecordDTO getMedicalRecordById(
             @PathVariable Long id) {
-
-        return medicalRecordService.convertToDTO(
-                medicalRecordService.getMedicalRecordById(id)
-        );
+        return medicalRecordService.getMedicalRecordById(id);
     }
 
     @GetMapping("/patient/{patientId}")
     public List<MedicalRecordDTO> getMedicalRecordsByPatient(
             @PathVariable Long patientId) {
-
-        return medicalRecordService.convertToDTO(
-                medicalRecordService.getMedicalRecordsByPatient(patientId)
-        );
+        return medicalRecordService
+                .getMedicalRecordsByPatient(patientId);
     }
 
     @PutMapping("/{id}")
     public MedicalRecordDTO updateMedicalRecord(
             @PathVariable Long id,
-            @RequestBody MedicalRecord medicalRecord) {
-
-        return medicalRecordService.convertToDTO(
-                medicalRecordService.updateMedicalRecord(
-                        id,
-                        medicalRecord
-                )
-        );
+            @Valid @RequestBody MedicalRecordDTO dto) {
+        return medicalRecordService.updateMedicalRecord(id, dto);
     }
 
     @DeleteMapping("/{id}")
