@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.StaffDTO;
 import com.CV.Hospital.entities.Department;
 import com.CV.Hospital.entities.Staff;
@@ -75,14 +76,14 @@ public class StaffService {
     private Staff findActiveStaff(Long id) {
         return staffRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Staff not found"));
+                        new ResourceNotFoundException("Staff not found"));
     }
 
     private Department getDepartment(Long id) {
         return departmentRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Department not found"));
+                        new ResourceNotFoundException("Department not found"));
     }
 
     public StaffDTO convertToDTO(Staff staff) {
