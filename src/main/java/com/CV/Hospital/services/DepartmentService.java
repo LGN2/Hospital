@@ -17,50 +17,74 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final HospitalRepository hospitalRepository;
 
+    public DepartmentDTO addDepartment(DepartmentDTO dto) {
 
-    public Department addDepartment(
-            Department department,
-            Long hospitalId) {
-        Hospital hospital = hospitalRepository.findByIdAndIsActiveTrue(hospitalId)
+        Hospital hospital = hospitalRepository
+                .findByIdAndIsActiveTrue(dto.getHospitalId())
                 .orElseThrow(() ->
-                        new RuntimeException("Hospital not found with ID: " + hospitalId));
+                        new RuntimeException("Hospital not found"));
+
+        Department department = new Department();
+        department.setName(dto.getName());
+        department.setDescription(dto.getDescription());
         department.setHospital(hospital);
-        department.setIsActive(true);
-        return departmentRepository.save(department);
+
+        return convertToDTO(departmentRepository.save(department));
     }
 
-    public List<Department> getAllDepartments() {
-        return departmentRepository.findByIsActiveTrue();
+    public List<DepartmentDTO> getAllDepartments() {
+        return convertToDTO(
+                departmentRepository.findByIsActiveTrue()
+        );
     }
 
-    public Department getDepartmentById(Long id) {
-        return departmentRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Department not found with ID: " + id));
+    public DepartmentDTO getDepartmentById(Long id) {
+        return convertToDTO(findActiveDepartment(id));
     }
 
-    public List<Department> getDepartmentsByHospital(Long hospitalId) {
-        return departmentRepository.findByHospitalIdAndIsActiveTrue(hospitalId);
+    public List<DepartmentDTO> getDepartmentsByHospital(
+            Long hospitalId) {
+
+        return convertToDTO(
+                departmentRepository
+                        .findByHospitalIdAndIsActiveTrue(hospitalId)
+        );
     }
 
-    public Department updateDepartment(
+    public DepartmentDTO updateDepartment(
             Long id,
-            Department updatedDepartment) {
-        Department department = getDepartmentById(id);
-        if (updatedDepartment.getName() != null &&
-                !updatedDepartment.getName().isBlank()) {
-            department.setName(updatedDepartment.getName());
+            DepartmentDTO dto) {
+
+        Department department = findActiveDepartment(id);
+
+        department.setName(dto.getName());
+        department.setDescription(dto.getDescription());
+
+        if (dto.getHospitalId() != null) {
+            Hospital hospital = hospitalRepository
+                    .findByIdAndIsActiveTrue(dto.getHospitalId())
+                    .orElseThrow(() ->
+                            new RuntimeException("Hospital not found"));
+
+            department.setHospital(hospital);
         }
-        if (updatedDepartment.getDescription() != null) {
-            department.setDescription(updatedDepartment.getDescription());
-        }
-        return departmentRepository.save(department);
+
+        return convertToDTO(
+                departmentRepository.save(department)
+        );
     }
 
     public void deleteDepartment(Long id) {
-        Department department = getDepartmentById(id);
+        Department department = findActiveDepartment(id);
         department.setIsActive(false);
         departmentRepository.save(department);
+    }
+
+    private Department findActiveDepartment(Long id) {
+        return departmentRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Department not found"));
     }
 
     public DepartmentDTO convertToDTO(Department department) {
@@ -68,15 +92,13 @@ public class DepartmentService {
                 .id(department.getId())
                 .name(department.getName())
                 .description(department.getDescription())
-                .hospitalId(
-                        department.getHospital() != null
-                                ? department.getHospital().getId()
-                                : null
-                )
+                .hospitalId(department.getHospital().getId())
                 .build();
     }
 
-    public List<DepartmentDTO> convertToDTO(List<Department> departments) {
+    public List<DepartmentDTO> convertToDTO(
+            List<Department> departments) {
+
         return departments.stream()
                 .map(this::convertToDTO)
                 .toList();
