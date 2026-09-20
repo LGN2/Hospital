@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.DoctorDTO;
 import com.CV.Hospital.entities.Doctor;
 import com.CV.Hospital.services.DoctorService;
 import lombok.RequiredArgsConstructor;
@@ -15,47 +16,60 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @PostMapping
-    public Doctor addDoctor(
+    public DoctorDTO addDoctor(
             @RequestBody Doctor doctor,
             @RequestParam Long departmentId,
             @RequestParam Long hospitalId) {
-        return doctorService.addDoctor(
-                doctor,
-                departmentId,
-                hospitalId
+
+        return doctorService.convertToDTO(
+                doctorService.addDoctor(
+                        doctor,
+                        departmentId,
+                        hospitalId
+                )
         );
     }
 
     @GetMapping
-    public List<Doctor> getAllDoctors() {
-        return doctorService.getAllDoctors();
+    public List<DoctorDTO> getAllDoctors() {
+        return doctorService.convertToDTO(
+                doctorService.getAllDoctors()
+        );
     }
 
     @GetMapping("/{id}")
-    public Doctor getDoctorById(@PathVariable Long id) {
-        return doctorService.getDoctorById(id);
+    public DoctorDTO getDoctorById(@PathVariable Long id) {
+        return doctorService.convertToDTO(
+                doctorService.getDoctorById(id)
+        );
     }
 
     @GetMapping("/department/{departmentId}")
-    public List<Doctor> getDoctorsByDepartment(
+    public List<DoctorDTO> getDoctorsByDepartment(
             @PathVariable Long departmentId) {
 
-        return doctorService.getDoctorsByDepartment(departmentId);
+        return doctorService.convertToDTO(
+                doctorService.getDoctorsByDepartment(departmentId)
+        );
     }
 
     @GetMapping("/hospital/{hospitalId}")
-    public List<Doctor> getDoctorsByHospital(
+    public List<DoctorDTO> getDoctorsByHospital(
             @PathVariable Long hospitalId) {
 
-        return doctorService.getDoctorsByHospital(hospitalId);
+        return doctorService.convertToDTO(
+                doctorService.getDoctorsByHospital(hospitalId)
+        );
     }
 
     @PutMapping("/{id}")
-    public Doctor updateDoctor(
+    public DoctorDTO updateDoctor(
             @PathVariable Long id,
             @RequestBody Doctor doctor) {
 
-        return doctorService.updateDoctor(id, doctor);
+        return doctorService.convertToDTO(
+                doctorService.updateDoctor(id, doctor)
+        );
     }
 
     @DeleteMapping("/{id}")
