@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.GuardianDTO;
 import com.CV.Hospital.entities.Guardian;
 import com.CV.Hospital.entities.Patient;
@@ -79,14 +80,14 @@ public class GuardianService {
         return guardianRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Guardian not found"));
+                        new ResourceNotFoundException("Guardian not found"));
     }
 
     private Patient getPatient(Long id) {
         return patientRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
     }
 
     public GuardianDTO convertToDTO(Guardian guardian) {
