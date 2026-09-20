@@ -171,4 +171,13 @@ public class AdmissionService {
                 .map(this::convertToDTO)
                 .toList();
     }
+
+    public List<AdmissionDTO> getPatientsAdmittedToFloor(
+            Integer floor) {
+
+        return convertToDTO(
+                admissionRepository
+                        .findActiveAdmissionsByFloor(floor)
+        );
+    }
 }
