@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.HospitalDTO;
-import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.services.HospitalService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,34 +16,26 @@ public class HospitalController {
     private final HospitalService hospitalService;
 
     @PostMapping
-    public HospitalDTO addHospital(@RequestBody Hospital hospital) {
-        return hospitalService.convertToDTO(
-                hospitalService.addHospital(hospital)
-        );
+    public HospitalDTO addHospital(
+            @Valid @RequestBody HospitalDTO dto) {
+        return hospitalService.addHospital(dto);
     }
 
     @GetMapping
     public List<HospitalDTO> getAllHospitals() {
-        return hospitalService.convertToDTO(
-                hospitalService.getAllHospitals()
-        );
+        return hospitalService.getAllHospitals();
     }
 
     @GetMapping("/{id}")
     public HospitalDTO getHospitalById(@PathVariable Long id) {
-        return hospitalService.convertToDTO(
-                hospitalService.getHospitalById(id)
-        );
+        return hospitalService.getHospitalById(id);
     }
 
     @PutMapping("/{id}")
     public HospitalDTO updateHospital(
             @PathVariable Long id,
-            @RequestBody Hospital hospital) {
-
-        return hospitalService.convertToDTO(
-                hospitalService.updateHospital(id, hospital)
-        );
+            @Valid @RequestBody HospitalDTO dto) {
+        return hospitalService.updateHospital(id, dto);
     }
 
     @DeleteMapping("/{id}")
