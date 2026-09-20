@@ -21,69 +21,109 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
 
+    public AppointmentDTO addAppointment(AppointmentDTO dto) {
 
-    public Appointment addAppointment(
-            Appointment appointment,
-            Long doctorId,
-            Long patientId) {
-        Doctor doctor = doctorRepository.findByIdAndIsActiveTrue(doctorId)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
-        Patient patient = patientRepository.findByIdAndIsActiveTrue(patientId)
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
-        if (appointment.getAppointmentDate() == null) {
-            throw new IllegalArgumentException("Appointment date is required");
-        }
-        if (appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException(
-                    "Appointment date cannot be in the past"
-            );
-        }
+        Doctor doctor = doctorRepository
+                .findByIdAndIsActiveTrue(dto.getDoctorId())
+                .orElseThrow(() ->
+                        new RuntimeException("Doctor not found"));
+
+        Patient patient = patientRepository
+                .findByIdAndIsActiveTrue(dto.getPatientId())
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
+
+        validateDate(dto.getAppointmentDate());
+
+        Appointment appointment = new Appointment();
+
+        appointment.setAppointmentDate(dto.getAppointmentDate());
+        appointment.setReason(dto.getReason());
+        appointment.setStatus(dto.getStatus());
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
-        appointment.setIsActive(true);
-        return appointmentRepository.save(appointment);
+
+        return convertToDTO(
+                appointmentRepository.save(appointment)
+        );
     }
 
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findByIsActiveTrue();
+    public List<AppointmentDTO> getAllAppointments() {
+        return convertToDTO(
+                appointmentRepository.findByIsActiveTrue()
+        );
     }
 
-    public Appointment getAppointmentById(Long id) {
-        return appointmentRepository.findByIdAndIsActiveTrue(id)
+    public AppointmentDTO getAppointmentById(Long id) {
+        return convertToDTO(findActiveAppointment(id));
+    }
+
+    public List<AppointmentDTO> getAppointmentsByDoctor(
+            Long doctorId) {
+
+        return convertToDTO(
+                appointmentRepository
+                        .findByDoctorIdAndIsActiveTrue(doctorId)
+        );
+    }
+
+    public List<AppointmentDTO> getAppointmentsByPatient(
+            Long patientId) {
+
+        return convertToDTO(
+                appointmentRepository
+                        .findByPatientIdAndIsActiveTrue(patientId)
+        );
+    }
+
+    public AppointmentDTO updateAppointment(
+            Long id,
+            AppointmentDTO dto) {
+
+        Appointment appointment = findActiveAppointment(id);
+
+        validateDate(dto.getAppointmentDate());
+
+        Doctor doctor = doctorRepository
+                .findByIdAndIsActiveTrue(dto.getDoctorId())
+                .orElseThrow(() ->
+                        new RuntimeException("Doctor not found"));
+
+        Patient patient = patientRepository
+                .findByIdAndIsActiveTrue(dto.getPatientId())
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
+
+        appointment.setAppointmentDate(dto.getAppointmentDate());
+        appointment.setReason(dto.getReason());
+        appointment.setStatus(dto.getStatus());
+        appointment.setDoctor(doctor);
+        appointment.setPatient(patient);
+
+        return convertToDTO(
+                appointmentRepository.save(appointment)
+        );
+    }
+
+    public void deleteAppointment(Long id) {
+        Appointment appointment = findActiveAppointment(id);
+        appointment.setIsActive(false);
+        appointmentRepository.save(appointment);
+    }
+
+    private Appointment findActiveAppointment(Long id) {
+        return appointmentRepository
+                .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
                         new RuntimeException("Appointment not found"));
     }
 
-    public List<Appointment> getAppointmentsByDoctor(Long doctorId) {
-        return appointmentRepository.findByDoctorIdAndIsActiveTrue(doctorId);
-    }
-
-    public List<Appointment> getAppointmentsByPatient(Long patientId) {
-        return appointmentRepository.findByPatientIdAndIsActiveTrue(patientId);
-    }
-
-    public Appointment updateAppointment(
-            Long id,
-            Appointment updatedAppointment) {
-        Appointment appointment = getAppointmentById(id);
-        if (updatedAppointment.getAppointmentDate() != null) {
-            appointment.setAppointmentDate(
-                    updatedAppointment.getAppointmentDate()
+    private void validateDate(LocalDateTime date) {
+        if (date == null || !date.isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException(
+                    "Appointment date must be in the future"
             );
         }
-        if (updatedAppointment.getReason() != null) {
-            appointment.setReason(updatedAppointment.getReason());
-        }
-        if (updatedAppointment.getStatus() != null) {
-            appointment.setStatus(updatedAppointment.getStatus());
-        }
-        return appointmentRepository.save(appointment);
-    }
-
-    public void deleteAppointment(Long id) {
-        Appointment appointment = getAppointmentById(id);
-        appointment.setIsActive(false);
-        appointmentRepository.save(appointment);
     }
 
     public AppointmentDTO convertToDTO(Appointment appointment) {
@@ -92,16 +132,8 @@ public class AppointmentService {
                 .appointmentDate(appointment.getAppointmentDate())
                 .reason(appointment.getReason())
                 .status(appointment.getStatus())
-                .doctorId(
-                        appointment.getDoctor() != null
-                                ? appointment.getDoctor().getId()
-                                : null
-                )
-                .patientId(
-                        appointment.getPatient() != null
-                                ? appointment.getPatient().getId()
-                                : null
-                )
+                .doctorId(appointment.getDoctor().getId())
+                .patientId(appointment.getPatient().getId())
                 .build();
     }
 
