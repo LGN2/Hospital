@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.PrescriptionDTO;
-import com.CV.Hospital.entities.Prescription;
 import com.CV.Hospital.services.PrescriptionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,51 +17,33 @@ public class PrescriptionController {
 
     @PostMapping
     public PrescriptionDTO addPrescription(
-            @RequestBody Prescription prescription,
-            @RequestParam Long medicalRecordId) {
-
-        return prescriptionService.convertToDTO(
-                prescriptionService.addPrescription(
-                        prescription,
-                        medicalRecordId
-                )
-        );
+            @Valid @RequestBody PrescriptionDTO dto) {
+        return prescriptionService.addPrescription(dto);
     }
 
     @GetMapping
     public List<PrescriptionDTO> getAllPrescriptions() {
-        return prescriptionService.convertToDTO(
-                prescriptionService.getAllPrescriptions()
-        );
+        return prescriptionService.getAllPrescriptions();
     }
 
     @GetMapping("/{id}")
     public PrescriptionDTO getPrescriptionById(
             @PathVariable Long id) {
-
-        return prescriptionService.convertToDTO(
-                prescriptionService.getPrescriptionById(id)
-        );
+        return prescriptionService.getPrescriptionById(id);
     }
 
     @GetMapping("/medical-record/{medicalRecordId}")
     public List<PrescriptionDTO> getByMedicalRecord(
             @PathVariable Long medicalRecordId) {
-
-        return prescriptionService.convertToDTO(
-                prescriptionService
-                        .getPrescriptionsByMedicalRecord(medicalRecordId)
-        );
+        return prescriptionService
+                .getPrescriptionsByMedicalRecord(medicalRecordId);
     }
 
     @PutMapping("/{id}")
     public PrescriptionDTO updatePrescription(
             @PathVariable Long id,
-            @RequestBody Prescription prescription) {
-
-        return prescriptionService.convertToDTO(
-                prescriptionService.updatePrescription(id, prescription)
-        );
+            @Valid @RequestBody PrescriptionDTO dto) {
+        return prescriptionService.updatePrescription(id, dto);
     }
 
     @DeleteMapping("/{id}")
