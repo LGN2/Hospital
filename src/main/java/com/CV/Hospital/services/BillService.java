@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.BillDTO;
 import com.CV.Hospital.entities.Bill;
 import com.CV.Hospital.entities.Patient;
@@ -99,14 +100,14 @@ public class BillService {
     private Bill findActiveBill(Long id) {
         return billRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Bill not found"));
+                        new ResourceNotFoundException("Bill not found"));
     }
 
     private Patient getPatient(Long id) {
         return patientRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
     }
 
     public BillDTO convertToDTO(Bill bill) {
@@ -139,7 +140,7 @@ public class BillService {
 
         patientRepository.findByIdAndIsActiveTrue(patientId)
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
 
         return billRepository
                 .getTotalBilledAmountForPatient(patientId);
