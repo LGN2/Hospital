@@ -48,4 +48,19 @@ public class RoomController {
     public void deleteRoom(@PathVariable Long id) {
         roomService.deleteRoom(id);
     }
+
+    @GetMapping("/available")
+    public List<RoomDTO> getRoomsWithAvailableCapacity() {
+
+        return roomService
+                .getRoomsWithAvailableCapacity();
+    }
+
+    @GetMapping("/hospital/{hospitalId}/available")
+    public List<RoomDTO> getAvailableRoomsByHospital(
+            @PathVariable Long hospitalId) {
+
+        return roomService
+                .getAvailableRoomsByHospital(hospitalId);
+    }
 }
