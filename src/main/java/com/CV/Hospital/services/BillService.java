@@ -9,7 +9,6 @@ import com.CV.Hospital.repositories.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,74 +19,93 @@ public class BillService {
     private final BillRepository billRepository;
     private final PatientRepository patientRepository;
 
-    public Bill addBill(Bill bill, Long patientId) {
-        Patient patient =
-                patientRepository.findByIdAndIsActiveTrue(patientId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Patient not found"));
-        if (bill.getAmount() == null ||
-                bill.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(
-                    "Bill amount must be greater than zero"
-            );
-        }
+    public BillDTO addBill(BillDTO dto) {
+
+        Patient patient = getPatient(dto.getPatientId());
+
+        Bill bill = new Bill();
+
+        bill.setAmount(dto.getAmount());
+        bill.setStatus(
+                dto.getStatus() == null
+                        ? BillStatusType.UNPAID
+                        : dto.getStatus()
+        );
+        bill.setBillDate(
+                dto.getBillDate() == null
+                        ? LocalDate.now()
+                        : dto.getBillDate()
+        );
         bill.setPatient(patient);
-        bill.setIsActive(true);
-        if (bill.getBillDate() == null) {
-            bill.setBillDate(LocalDate.now());
-        }
-        if (bill.getStatus() == null) {
-            bill.setStatus(BillStatusType.UNPAID);
-        }
-        return billRepository.save(bill);
+
+        return convertToDTO(billRepository.save(bill));
     }
 
-    public List<Bill> getAllBills() {
-        return billRepository.findByIsActiveTrue();
+    public List<BillDTO> getAllBills() {
+        return convertToDTO(billRepository.findByIsActiveTrue());
     }
 
-    public Bill getBillById(Long id) {
+    public BillDTO getBillById(Long id) {
+        return convertToDTO(findActiveBill(id));
+    }
+
+    public List<BillDTO> getBillsByPatient(Long patientId) {
+        return convertToDTO(
+                billRepository
+                        .findByPatientIdAndIsActiveTrue(patientId)
+        );
+    }
+
+    public List<BillDTO> getUnpaidBills() {
+        return convertToDTO(
+                billRepository.findByStatusAndIsActiveTrue(
+                        BillStatusType.UNPAID
+                )
+        );
+    }
+
+    public List<BillDTO> getUnpaidBillsByPatient(
+            Long patientId) {
+
+        return convertToDTO(
+                billRepository
+                        .findByPatientIdAndStatusAndIsActiveTrue(
+                                patientId,
+                                BillStatusType.UNPAID
+                        )
+        );
+    }
+
+    public BillDTO updateBill(Long id, BillDTO dto) {
+
+        Bill bill = findActiveBill(id);
+        Patient patient = getPatient(dto.getPatientId());
+
+        bill.setAmount(dto.getAmount());
+        bill.setStatus(dto.getStatus());
+        bill.setBillDate(dto.getBillDate());
+        bill.setPatient(patient);
+
+        return convertToDTO(billRepository.save(bill));
+    }
+
+    public void deleteBill(Long id) {
+        Bill bill = findActiveBill(id);
+        bill.setIsActive(false);
+        billRepository.save(bill);
+    }
+
+    private Bill findActiveBill(Long id) {
         return billRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
                         new RuntimeException("Bill not found"));
     }
 
-    public List<Bill> getBillsByPatient(Long patientId) {
-        return billRepository
-                .findByPatientIdAndIsActiveTrue(patientId);
-    }
-
-    public List<Bill> getUnpaidBills() {
-        return billRepository
-                .findByStatusAndIsActiveTrue(BillStatusType.UNPAID);
-    }
-
-    public List<Bill> getUnpaidBillsByPatient(Long patientId) {
-        return billRepository
-                .findByPatientIdAndStatusAndIsActiveTrue(
-                        patientId,
-                        BillStatusType.UNPAID
-                );
-    }
-
-    public Bill updateBill(Long id, Bill updatedBill) {
-        Bill bill = getBillById(id);
-        if (updatedBill.getAmount() != null) {
-            bill.setAmount(updatedBill.getAmount());
-        }
-        if (updatedBill.getStatus() != null) {
-            bill.setStatus(updatedBill.getStatus());
-        }
-        if (updatedBill.getBillDate() != null) {
-            bill.setBillDate(updatedBill.getBillDate());
-        }
-        return billRepository.save(bill);
-    }
-
-    public void deleteBill(Long id) {
-        Bill bill = getBillById(id);
-        bill.setIsActive(false);
-        billRepository.save(bill);
+    private Patient getPatient(Long id) {
+        return patientRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
     }
 
     public BillDTO convertToDTO(Bill bill) {
@@ -96,11 +114,7 @@ public class BillService {
                 .amount(bill.getAmount())
                 .status(bill.getStatus())
                 .billDate(bill.getBillDate())
-                .patientId(
-                        bill.getPatient() != null
-                                ? bill.getPatient().getId()
-                                : null
-                )
+                .patientId(bill.getPatient().getId())
                 .build();
     }
 
@@ -109,5 +123,4 @@ public class BillService {
                 .map(this::convertToDTO)
                 .toList();
     }
-
 }
