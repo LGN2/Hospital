@@ -20,70 +20,105 @@ public class DoctorService {
     private final DepartmentRepository departmentRepository;
     private final HospitalRepository hospitalRepository;
 
-    public Doctor addDoctor(
-            Doctor doctor,
-            Long departmentId,
-            Long hospitalId) {
-        Department department =
-                departmentRepository.findByIdAndIsActiveTrue(departmentId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Department not found"));
-        Hospital hospital =
-                hospitalRepository.findByIdAndIsActiveTrue(hospitalId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Hospital not found"));
-        if (!department.getHospital().getId().equals(hospital.getId())) {
-            throw new IllegalArgumentException(
-                    "Department does not belong to the selected hospital"
-            );
-        }
+    public DoctorDTO addDoctor(DoctorDTO dto) {
+
+        Department department = getDepartment(dto.getDepartmentId());
+        Hospital hospital = getHospital(dto.getHospitalId());
+
+        validateDepartmentHospital(department, hospital);
+
+        Doctor doctor = new Doctor();
+
+        doctor.setName(dto.getName());
+        doctor.setEmail(dto.getEmail());
+        doctor.setPhoneNumber(dto.getPhoneNumber());
+        doctor.setSpecialization(dto.getSpecialization());
         doctor.setDepartment(department);
         doctor.setHospital(hospital);
-        doctor.setIsActive(true);
-        return doctorRepository.save(doctor);
+
+        return convertToDTO(doctorRepository.save(doctor));
     }
 
-    public List<Doctor> getAllDoctors() {
-        return doctorRepository.findByIsActiveTrue();
+    public List<DoctorDTO> getAllDoctors() {
+        return convertToDTO(
+                doctorRepository.findByIsActiveTrue()
+        );
     }
 
-    public Doctor getDoctorById(Long id) {
-        return doctorRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Doctor not found with ID: " + id));
+    public DoctorDTO getDoctorById(Long id) {
+        return convertToDTO(findActiveDoctor(id));
     }
 
-    public List<Doctor> getDoctorsByDepartment(Long departmentId) {
-        return doctorRepository
-                .findByDepartmentIdAndIsActiveTrue(departmentId);
+    public List<DoctorDTO> getDoctorsByDepartment(
+            Long departmentId) {
+
+        return convertToDTO(
+                doctorRepository
+                        .findByDepartmentIdAndIsActiveTrue(departmentId)
+        );
     }
 
-    public List<Doctor> getDoctorsByHospital(Long hospitalId) {
-        return doctorRepository
-                .findByHospitalIdAndIsActiveTrue(hospitalId);
+    public List<DoctorDTO> getDoctorsByHospital(Long hospitalId) {
+        return convertToDTO(
+                doctorRepository
+                        .findByHospitalIdAndIsActiveTrue(hospitalId)
+        );
     }
 
-    public Doctor updateDoctor(Long id, Doctor updatedDoctor) {
-        Doctor doctor = getDoctorById(id);
-        if (updatedDoctor.getName() != null) {
-            doctor.setName(updatedDoctor.getName());
-        }
-        if (updatedDoctor.getEmail() != null) {
-            doctor.setEmail(updatedDoctor.getEmail());
-        }
-        if (updatedDoctor.getPhoneNumber() != null) {
-            doctor.setPhoneNumber(updatedDoctor.getPhoneNumber());
-        }
-        if (updatedDoctor.getSpecialization() != null) {
-            doctor.setSpecialization(updatedDoctor.getSpecialization());
-        }
-        return doctorRepository.save(doctor);
+    public DoctorDTO updateDoctor(Long id, DoctorDTO dto) {
+
+        Doctor doctor = findActiveDoctor(id);
+
+        Department department = getDepartment(dto.getDepartmentId());
+        Hospital hospital = getHospital(dto.getHospitalId());
+
+        validateDepartmentHospital(department, hospital);
+
+        doctor.setName(dto.getName());
+        doctor.setEmail(dto.getEmail());
+        doctor.setPhoneNumber(dto.getPhoneNumber());
+        doctor.setSpecialization(dto.getSpecialization());
+        doctor.setDepartment(department);
+        doctor.setHospital(hospital);
+
+        return convertToDTO(doctorRepository.save(doctor));
     }
 
     public void deleteDoctor(Long id) {
-        Doctor doctor = getDoctorById(id);
+        Doctor doctor = findActiveDoctor(id);
         doctor.setIsActive(false);
         doctorRepository.save(doctor);
+    }
+
+    private Doctor findActiveDoctor(Long id) {
+        return doctorRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Doctor not found"));
+    }
+
+    private Department getDepartment(Long id) {
+        return departmentRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Department not found"));
+    }
+
+    private Hospital getHospital(Long id) {
+        return hospitalRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Hospital not found"));
+    }
+
+    private void validateDepartmentHospital(
+            Department department,
+            Hospital hospital) {
+
+        if (!department.getHospital().getId()
+                .equals(hospital.getId())) {
+
+            throw new IllegalArgumentException(
+                    "Department does not belong to selected hospital"
+            );
+        }
     }
 
     public DoctorDTO convertToDTO(Doctor doctor) {
@@ -93,16 +128,8 @@ public class DoctorService {
                 .email(doctor.getEmail())
                 .phoneNumber(doctor.getPhoneNumber())
                 .specialization(doctor.getSpecialization())
-                .departmentId(
-                        doctor.getDepartment() != null
-                                ? doctor.getDepartment().getId()
-                                : null
-                )
-                .hospitalId(
-                        doctor.getHospital() != null
-                                ? doctor.getHospital().getId()
-                                : null
-                )
+                .departmentId(doctor.getDepartment().getId())
+                .hospitalId(doctor.getHospital().getId())
                 .build();
     }
 
