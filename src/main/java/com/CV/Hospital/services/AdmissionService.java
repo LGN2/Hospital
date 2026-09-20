@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.AdmissionDTO;
 import com.CV.Hospital.entities.Admission;
 import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.entities.Room;
@@ -98,5 +99,31 @@ public class AdmissionService {
         Admission admission = getAdmissionById(id);
         admission.setIsActive(false);
         admissionRepository.save(admission);
+    }
+
+    public AdmissionDTO convertToDTO(Admission admission) {
+        return AdmissionDTO.builder()
+                .id(admission.getId())
+                .admitDate(admission.getAdmitDate())
+                .dischargeDate(admission.getDischargeDate())
+                .patientId(
+                        admission.getPatient() != null
+                                ? admission.getPatient().getId()
+                                : null
+                )
+                .roomId(
+                        admission.getRoom() != null
+                                ? admission.getRoom().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<AdmissionDTO> convertToDTO(
+            List<Admission> admissions) {
+
+        return admissions.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
