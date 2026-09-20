@@ -50,4 +50,12 @@ public class MedicalRecordController {
     public void deleteMedicalRecord(@PathVariable Long id) {
         medicalRecordService.deleteMedicalRecord(id);
     }
+
+    @GetMapping("/patient/{patientId}/history")
+    public List<MedicalRecordDTO> getPatientMedicalRecords(
+            @PathVariable Long patientId) {
+
+        return medicalRecordService
+                .getPatientMedicalRecords(patientId);
+    }
 }
