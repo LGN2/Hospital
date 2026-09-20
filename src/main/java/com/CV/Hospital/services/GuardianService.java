@@ -17,57 +17,76 @@ public class GuardianService {
     private final GuardianRepository guardianRepository;
     private final PatientRepository patientRepository;
 
-    public Guardian addGuardian(
-            Guardian guardian,
-            Long patientId) {
-        Patient patient =
-                patientRepository.findByIdAndIsActiveTrue(patientId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Patient not found"));
+    public GuardianDTO addGuardian(GuardianDTO dto) {
+
+        Patient patient = getPatient(dto.getPatientId());
+
+        Guardian guardian = new Guardian();
+
+        guardian.setName(dto.getName());
+        guardian.setRelationship(dto.getRelationship());
+        guardian.setPhoneNumber(dto.getPhoneNumber());
         guardian.setPatient(patient);
-        guardian.setIsActive(true);
-        return guardianRepository.save(guardian);
+
+        return convertToDTO(
+                guardianRepository.save(guardian)
+        );
     }
 
-    public List<Guardian> getAllGuardians() {
-        return guardianRepository.findByIsActiveTrue();
+    public List<GuardianDTO> getAllGuardians() {
+        return convertToDTO(
+                guardianRepository.findByIsActiveTrue()
+        );
     }
 
-    public Guardian getGuardianById(Long id) {
-        return guardianRepository.findByIdAndIsActiveTrue(id)
+    public GuardianDTO getGuardianById(Long id) {
+        return convertToDTO(findActiveGuardian(id));
+    }
+
+    public List<GuardianDTO> getGuardiansByPatient(
+            Long patientId) {
+
+        return convertToDTO(
+                guardianRepository
+                        .findByPatientIdAndIsActiveTrue(patientId)
+        );
+    }
+
+    public GuardianDTO updateGuardian(
+            Long id,
+            GuardianDTO dto) {
+
+        Guardian guardian = findActiveGuardian(id);
+        Patient patient = getPatient(dto.getPatientId());
+
+        guardian.setName(dto.getName());
+        guardian.setRelationship(dto.getRelationship());
+        guardian.setPhoneNumber(dto.getPhoneNumber());
+        guardian.setPatient(patient);
+
+        return convertToDTO(
+                guardianRepository.save(guardian)
+        );
+    }
+
+    public void deleteGuardian(Long id) {
+        Guardian guardian = findActiveGuardian(id);
+        guardian.setIsActive(false);
+        guardianRepository.save(guardian);
+    }
+
+    private Guardian findActiveGuardian(Long id) {
+        return guardianRepository
+                .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
                         new RuntimeException("Guardian not found"));
     }
 
-    public List<Guardian> getGuardiansByPatient(Long patientId) {
-        return guardianRepository
-                .findByPatientIdAndIsActiveTrue(patientId);
-    }
-
-    public Guardian updateGuardian(
-            Long id,
-            Guardian updatedGuardian) {
-        Guardian guardian = getGuardianById(id);
-        if (updatedGuardian.getName() != null) {
-            guardian.setName(updatedGuardian.getName());
-        }
-        if (updatedGuardian.getRelationship() != null) {
-            guardian.setRelationship(
-                    updatedGuardian.getRelationship()
-            );
-        }
-        if (updatedGuardian.getPhoneNumber() != null) {
-            guardian.setPhoneNumber(
-                    updatedGuardian.getPhoneNumber()
-            );
-        }
-        return guardianRepository.save(guardian);
-    }
-
-    public void deleteGuardian(Long id) {
-        Guardian guardian = getGuardianById(id);
-        guardian.setIsActive(false);
-        guardianRepository.save(guardian);
+    private Patient getPatient(Long id) {
+        return patientRepository
+                .findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
     }
 
     public GuardianDTO convertToDTO(Guardian guardian) {
@@ -76,11 +95,7 @@ public class GuardianService {
                 .name(guardian.getName())
                 .relationship(guardian.getRelationship())
                 .phoneNumber(guardian.getPhoneNumber())
-                .patientId(
-                        guardian.getPatient() != null
-                                ? guardian.getPatient().getId()
-                                : null
-                )
+                .patientId(guardian.getPatient().getId())
                 .build();
     }
 
@@ -91,5 +106,4 @@ public class GuardianService {
                 .map(this::convertToDTO)
                 .toList();
     }
-
 }
