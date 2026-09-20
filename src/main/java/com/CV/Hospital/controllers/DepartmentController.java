@@ -18,6 +18,7 @@ public class DepartmentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public DepartmentDTO addDepartment(
             @Valid @RequestBody DepartmentDTO dto) {
         return departmentService.addDepartment(dto);
@@ -49,6 +50,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartment(@PathVariable Long id) {
         departmentService.deleteDepartment(id);
