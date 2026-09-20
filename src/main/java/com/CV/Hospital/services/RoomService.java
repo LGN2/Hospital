@@ -96,4 +96,27 @@ public class RoomService {
                 .map(this::convertToDTO)
                 .toList();
     }
+
+    public List<RoomDTO> getRoomsWithAvailableCapacity() {
+
+        return convertToDTO(
+                roomRepository.findRoomsWithAvailableCapacity()
+        );
+    }
+
+    public List<RoomDTO> getAvailableRoomsByHospital(
+            Long hospitalId) {
+
+        hospitalRepository
+                .findByIdAndIsActiveTrue(hospitalId)
+                .orElseThrow(() ->
+                        new RuntimeException("Hospital not found"));
+
+        return convertToDTO(
+                roomRepository
+                        .findRoomsWithAvailableCapacityByHospital(
+                                hospitalId
+                        )
+        );
+    }
 }
