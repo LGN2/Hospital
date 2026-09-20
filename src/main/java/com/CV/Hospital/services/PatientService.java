@@ -17,52 +17,69 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final HospitalRepository hospitalRepository;
 
-    public Patient addPatient(Patient patient, Long hospitalId) {
-        Hospital hospital =
-                hospitalRepository.findByIdAndIsActiveTrue(hospitalId)
-                        .orElseThrow(() ->
-                                new RuntimeException("Hospital not found"));
-        patient.setHospital(hospital);
-        patient.setIsActive(true);
-        return patientRepository.save(patient);
-    }
+    public PatientDTO addPatient(PatientDTO dto) {
 
-    public List<Patient> getAllPatients() {
-        return patientRepository.findByIsActiveTrue();
-    }
-
-    public Patient getPatientById(Long id) {
-        return patientRepository.findByIdAndIsActiveTrue(id)
+        Hospital hospital = hospitalRepository
+                .findByIdAndIsActiveTrue(dto.getHospitalId())
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found with ID: " + id));
+                        new RuntimeException("Hospital not found"));
+
+        Patient patient = new Patient();
+
+        patient.setName(dto.getName());
+        patient.setGender(dto.getGender());
+        patient.setPhoneNumber(dto.getPhoneNumber());
+        patient.setBloodGroup(dto.getBloodGroup());
+        patient.setHospital(hospital);
+
+        return convertToDTO(patientRepository.save(patient));
     }
 
-    public List<Patient> getPatientsByHospital(Long hospitalId) {
-        return patientRepository
-                .findByHospitalIdAndIsActiveTrue(hospitalId);
+    public List<PatientDTO> getAllPatients() {
+        return convertToDTO(
+                patientRepository.findByIsActiveTrue()
+        );
     }
 
-    public Patient updatePatient(Long id, Patient updatedPatient) {
-        Patient patient = getPatientById(id);
-        if (updatedPatient.getName() != null) {
-            patient.setName(updatedPatient.getName());
-        }
-        if (updatedPatient.getGender() != null) {
-            patient.setGender(updatedPatient.getGender());
-        }
-        if (updatedPatient.getPhoneNumber() != null) {
-            patient.setPhoneNumber(updatedPatient.getPhoneNumber());
-        }
-        if (updatedPatient.getBloodGroup() != null) {
-            patient.setBloodGroup(updatedPatient.getBloodGroup());
-        }
-        return patientRepository.save(patient);
+    public PatientDTO getPatientById(Long id) {
+        return convertToDTO(findActivePatient(id));
+    }
+
+    public List<PatientDTO> getPatientsByHospital(Long hospitalId) {
+        return convertToDTO(
+                patientRepository
+                        .findByHospitalIdAndIsActiveTrue(hospitalId)
+        );
+    }
+
+    public PatientDTO updatePatient(Long id, PatientDTO dto) {
+
+        Patient patient = findActivePatient(id);
+
+        Hospital hospital = hospitalRepository
+                .findByIdAndIsActiveTrue(dto.getHospitalId())
+                .orElseThrow(() ->
+                        new RuntimeException("Hospital not found"));
+
+        patient.setName(dto.getName());
+        patient.setGender(dto.getGender());
+        patient.setPhoneNumber(dto.getPhoneNumber());
+        patient.setBloodGroup(dto.getBloodGroup());
+        patient.setHospital(hospital);
+
+        return convertToDTO(patientRepository.save(patient));
     }
 
     public void deletePatient(Long id) {
-        Patient patient = getPatientById(id);
+        Patient patient = findActivePatient(id);
         patient.setIsActive(false);
         patientRepository.save(patient);
+    }
+
+    private Patient findActivePatient(Long id) {
+        return patientRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
     }
 
     public PatientDTO convertToDTO(Patient patient) {
@@ -72,11 +89,7 @@ public class PatientService {
                 .gender(patient.getGender())
                 .phoneNumber(patient.getPhoneNumber())
                 .bloodGroup(patient.getBloodGroup())
-                .hospitalId(
-                        patient.getHospital() != null
-                                ? patient.getHospital().getId()
-                                : null
-                )
+                .hospitalId(patient.getHospital().getId())
                 .build();
     }
 
