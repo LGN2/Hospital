@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.PrescriptionDTO;
 import com.CV.Hospital.entities.MedicalRecord;
 import com.CV.Hospital.entities.Prescription;
@@ -22,7 +23,7 @@ public class PrescriptionService {
         MedicalRecord record = medicalRecordRepository
                 .findByIdAndIsActiveTrue(dto.getMedicalRecordId())
                 .orElseThrow(() ->
-                        new RuntimeException("Medical record not found"));
+                        new ResourceNotFoundException("Medical record not found"));
 
         Prescription prescription = new Prescription();
 
@@ -66,7 +67,7 @@ public class PrescriptionService {
         MedicalRecord record = medicalRecordRepository
                 .findByIdAndIsActiveTrue(dto.getMedicalRecordId())
                 .orElseThrow(() ->
-                        new RuntimeException("Medical record not found"));
+                        new ResourceNotFoundException("Medical record not found"));
 
         prescription.setMedicineName(dto.getMedicineName());
         prescription.setDosage(dto.getDosage());
@@ -88,7 +89,7 @@ public class PrescriptionService {
         return prescriptionRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Prescription not found"));
+                        new ResourceNotFoundException("Prescription not found"));
     }
 
     public PrescriptionDTO convertToDTO(Prescription prescription) {
