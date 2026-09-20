@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.BillDTO;
-import com.CV.Hospital.entities.Bill;
 import com.CV.Hospital.services.BillService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,61 +17,42 @@ public class BillController {
 
     @PostMapping
     public BillDTO addBill(
-            @RequestBody Bill bill,
-            @RequestParam Long patientId) {
-
-        return billService.convertToDTO(
-                billService.addBill(bill, patientId)
-        );
+            @Valid @RequestBody BillDTO dto) {
+        return billService.addBill(dto);
     }
 
     @GetMapping
     public List<BillDTO> getAllBills() {
-        return billService.convertToDTO(
-                billService.getAllBills()
-        );
+        return billService.getAllBills();
     }
 
     @GetMapping("/{id}")
     public BillDTO getBillById(@PathVariable Long id) {
-        return billService.convertToDTO(
-                billService.getBillById(id)
-        );
+        return billService.getBillById(id);
     }
 
     @GetMapping("/patient/{patientId}")
     public List<BillDTO> getBillsByPatient(
             @PathVariable Long patientId) {
-
-        return billService.convertToDTO(
-                billService.getBillsByPatient(patientId)
-        );
+        return billService.getBillsByPatient(patientId);
     }
 
     @GetMapping("/unpaid")
     public List<BillDTO> getUnpaidBills() {
-        return billService.convertToDTO(
-                billService.getUnpaidBills()
-        );
+        return billService.getUnpaidBills();
     }
 
     @GetMapping("/patient/{patientId}/unpaid")
     public List<BillDTO> getUnpaidBillsByPatient(
             @PathVariable Long patientId) {
-
-        return billService.convertToDTO(
-                billService.getUnpaidBillsByPatient(patientId)
-        );
+        return billService.getUnpaidBillsByPatient(patientId);
     }
 
     @PutMapping("/{id}")
     public BillDTO updateBill(
             @PathVariable Long id,
-            @RequestBody Bill bill) {
-
-        return billService.convertToDTO(
-                billService.updateBill(id, bill)
-        );
+            @Valid @RequestBody BillDTO dto) {
+        return billService.updateBill(id, dto);
     }
 
     @DeleteMapping("/{id}")
