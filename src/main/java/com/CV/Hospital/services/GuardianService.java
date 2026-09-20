@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.GuardianDTO;
 import com.CV.Hospital.entities.Guardian;
 import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.repositories.GuardianRepository;
@@ -67,6 +68,28 @@ public class GuardianService {
         Guardian guardian = getGuardianById(id);
         guardian.setIsActive(false);
         guardianRepository.save(guardian);
+    }
+
+    public GuardianDTO convertToDTO(Guardian guardian) {
+        return GuardianDTO.builder()
+                .id(guardian.getId())
+                .name(guardian.getName())
+                .relationship(guardian.getRelationship())
+                .phoneNumber(guardian.getPhoneNumber())
+                .patientId(
+                        guardian.getPatient() != null
+                                ? guardian.getPatient().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<GuardianDTO> convertToDTO(
+            List<Guardian> guardians) {
+
+        return guardians.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
 }
