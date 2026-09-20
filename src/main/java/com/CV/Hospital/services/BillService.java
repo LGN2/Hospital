@@ -9,6 +9,7 @@ import com.CV.Hospital.repositories.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -122,5 +123,25 @@ public class BillService {
         return bills.stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public List<BillDTO> getOutstandingBills() {
+
+        return convertToDTO(
+                billRepository.findOutstandingBills(
+                        BillStatusType.UNPAID
+                )
+        );
+    }
+
+    public BigDecimal getTotalBilledAmountForPatient(
+            Long patientId) {
+
+        patientRepository.findByIdAndIsActiveTrue(patientId)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
+
+        return billRepository
+                .getTotalBilledAmountForPatient(patientId);
     }
 }
