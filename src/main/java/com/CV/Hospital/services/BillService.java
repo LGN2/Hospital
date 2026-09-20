@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.BillDTO;
 import com.CV.Hospital.entities.Bill;
 import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.entities.type.BillStatusType;
@@ -87,6 +88,26 @@ public class BillService {
         Bill bill = getBillById(id);
         bill.setIsActive(false);
         billRepository.save(bill);
+    }
+
+    public BillDTO convertToDTO(Bill bill) {
+        return BillDTO.builder()
+                .id(bill.getId())
+                .amount(bill.getAmount())
+                .status(bill.getStatus())
+                .billDate(bill.getBillDate())
+                .patientId(
+                        bill.getPatient() != null
+                                ? bill.getPatient().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<BillDTO> convertToDTO(List<Bill> bills) {
+        return bills.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
 }
