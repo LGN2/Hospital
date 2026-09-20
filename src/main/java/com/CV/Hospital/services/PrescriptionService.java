@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.PrescriptionDTO;
 import com.CV.Hospital.entities.MedicalRecord;
 import com.CV.Hospital.entities.Prescription;
 import com.CV.Hospital.repositories.MedicalRecordRepository;
@@ -69,5 +70,29 @@ public class PrescriptionService {
         Prescription prescription = getPrescriptionById(id);
         prescription.setIsActive(false);
         prescriptionRepository.save(prescription);
+    }
+
+    public PrescriptionDTO convertToDTO(
+            Prescription prescription) {
+
+        return PrescriptionDTO.builder()
+                .id(prescription.getId())
+                .medicineName(prescription.getMedicineName())
+                .dosage(prescription.getDosage())
+                .durationDays(prescription.getDurationDays())
+                .medicalRecordId(
+                        prescription.getMedicalRecord() != null
+                                ? prescription.getMedicalRecord().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<PrescriptionDTO> convertToDTO(
+            List<Prescription> prescriptions) {
+
+        return prescriptions.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
