@@ -18,6 +18,7 @@ public class PrescriptionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public PrescriptionDTO addPrescription(
             @Valid @RequestBody PrescriptionDTO dto) {
         return prescriptionService.addPrescription(dto);
@@ -49,6 +50,7 @@ public class PrescriptionController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePrescription(@PathVariable Long id) {
         prescriptionService.deletePrescription(id);
