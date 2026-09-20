@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.GuardianDTO;
 import com.CV.Hospital.entities.Guardian;
 import com.CV.Hospital.services.GuardianService;
 import lombok.RequiredArgsConstructor;
@@ -15,36 +16,46 @@ public class GuardianController {
     private final GuardianService guardianService;
 
     @PostMapping
-    public Guardian addGuardian(
+    public GuardianDTO addGuardian(
             @RequestBody Guardian guardian,
             @RequestParam Long patientId) {
 
-        return guardianService.addGuardian(guardian, patientId);
+        return guardianService.convertToDTO(
+                guardianService.addGuardian(guardian, patientId)
+        );
     }
 
     @GetMapping
-    public List<Guardian> getAllGuardians() {
-        return guardianService.getAllGuardians();
+    public List<GuardianDTO> getAllGuardians() {
+        return guardianService.convertToDTO(
+                guardianService.getAllGuardians()
+        );
     }
 
     @GetMapping("/{id}")
-    public Guardian getGuardianById(@PathVariable Long id) {
-        return guardianService.getGuardianById(id);
+    public GuardianDTO getGuardianById(@PathVariable Long id) {
+        return guardianService.convertToDTO(
+                guardianService.getGuardianById(id)
+        );
     }
 
     @GetMapping("/patient/{patientId}")
-    public List<Guardian> getGuardiansByPatient(
+    public List<GuardianDTO> getGuardiansByPatient(
             @PathVariable Long patientId) {
 
-        return guardianService.getGuardiansByPatient(patientId);
+        return guardianService.convertToDTO(
+                guardianService.getGuardiansByPatient(patientId)
+        );
     }
 
     @PutMapping("/{id}")
-    public Guardian updateGuardian(
+    public GuardianDTO updateGuardian(
             @PathVariable Long id,
             @RequestBody Guardian guardian) {
 
-        return guardianService.updateGuardian(id, guardian);
+        return guardianService.convertToDTO(
+                guardianService.updateGuardian(id, guardian)
+        );
     }
 
     @DeleteMapping("/{id}")
