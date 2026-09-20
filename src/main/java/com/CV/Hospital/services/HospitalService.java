@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.HospitalDTO;
 import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.repositories.HospitalRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +69,19 @@ public class HospitalService {
         Hospital hospital = getHospitalById(id);
         hospital.setIsActive(false);
         hospitalRepository.save(hospital);
+    }
+
+    public HospitalDTO convertToDTO(Hospital hospital) {
+        return HospitalDTO.builder()
+                .id(hospital.getId())
+                .name(hospital.getName())
+                .location(hospital.getLocation())
+                .build();
+    }
+
+    public List<HospitalDTO> convertToDTO(List<Hospital> hospitals) {
+        return hospitals.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
