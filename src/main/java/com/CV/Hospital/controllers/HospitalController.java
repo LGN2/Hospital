@@ -19,6 +19,7 @@ public class HospitalController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public HospitalDTO addHospital(
             @Valid @RequestBody HospitalDTO dto) {
         return hospitalService.addHospital(dto);
@@ -42,6 +43,7 @@ public class HospitalController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteHospital(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
