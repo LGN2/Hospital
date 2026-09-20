@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.RoomDTO;
 import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.entities.Room;
@@ -22,7 +23,7 @@ public class RoomService {
         Hospital hospital = hospitalRepository
                 .findByIdAndIsActiveTrue(dto.getHospitalId())
                 .orElseThrow(() ->
-                        new RuntimeException("Hospital not found"));
+                        new ResourceNotFoundException("Hospital not found"));
 
         Room room = new Room();
 
@@ -57,7 +58,7 @@ public class RoomService {
         Hospital hospital = hospitalRepository
                 .findByIdAndIsActiveTrue(dto.getHospitalId())
                 .orElseThrow(() ->
-                        new RuntimeException("Hospital not found"));
+                        new ResourceNotFoundException("Hospital not found"));
 
         room.setRoomNumber(dto.getRoomNumber());
         room.setFloor(dto.getFloor());
@@ -77,7 +78,7 @@ public class RoomService {
     private Room findActiveRoom(Long id) {
         return roomRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Room not found"));
+                        new ResourceNotFoundException("Room not found"));
     }
 
     public RoomDTO convertToDTO(Room room) {
@@ -110,7 +111,7 @@ public class RoomService {
         hospitalRepository
                 .findByIdAndIsActiveTrue(hospitalId)
                 .orElseThrow(() ->
-                        new RuntimeException("Hospital not found"));
+                        new ResourceNotFoundException("Hospital not found"));
 
         return convertToDTO(
                 roomRepository
