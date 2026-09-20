@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.PatientDTO;
-import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.services.PatientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,45 +17,31 @@ public class PatientController {
 
     @PostMapping
     public PatientDTO addPatient(
-            @RequestBody Patient patient,
-            @RequestParam Long hospitalId) {
-
-        return patientService.convertToDTO(
-                patientService.addPatient(patient, hospitalId)
-        );
+            @Valid @RequestBody PatientDTO dto) {
+        return patientService.addPatient(dto);
     }
 
     @GetMapping
     public List<PatientDTO> getAllPatients() {
-        return patientService.convertToDTO(
-                patientService.getAllPatients()
-        );
+        return patientService.getAllPatients();
     }
 
     @GetMapping("/{id}")
     public PatientDTO getPatientById(@PathVariable Long id) {
-        return patientService.convertToDTO(
-                patientService.getPatientById(id)
-        );
+        return patientService.getPatientById(id);
     }
 
     @GetMapping("/hospital/{hospitalId}")
     public List<PatientDTO> getPatientsByHospital(
             @PathVariable Long hospitalId) {
-
-        return patientService.convertToDTO(
-                patientService.getPatientsByHospital(hospitalId)
-        );
+        return patientService.getPatientsByHospital(hospitalId);
     }
 
     @PutMapping("/{id}")
     public PatientDTO updatePatient(
             @PathVariable Long id,
-            @RequestBody Patient patient) {
-
-        return patientService.convertToDTO(
-                patientService.updatePatient(id, patient)
-        );
+            @Valid @RequestBody PatientDTO dto) {
+        return patientService.updatePatient(id, dto);
     }
 
     @DeleteMapping("/{id}")
