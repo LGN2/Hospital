@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.AppointmentDTO;
 import com.CV.Hospital.entities.Appointment;
 import com.CV.Hospital.services.AppointmentService;
 import lombok.RequiredArgsConstructor;
@@ -15,47 +16,60 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping
-    public Appointment addAppointment(
+    public AppointmentDTO addAppointment(
             @RequestBody Appointment appointment,
             @RequestParam Long doctorId,
             @RequestParam Long patientId) {
-        return appointmentService.addAppointment(
-                appointment,
-                doctorId,
-                patientId
+
+        return appointmentService.convertToDTO(
+                appointmentService.addAppointment(
+                        appointment,
+                        doctorId,
+                        patientId
+                )
         );
     }
 
     @GetMapping
-    public List<Appointment> getAllAppointments() {
-        return appointmentService.getAllAppointments();
+    public List<AppointmentDTO> getAllAppointments() {
+        return appointmentService.convertToDTO(
+                appointmentService.getAllAppointments()
+        );
     }
 
     @GetMapping("/{id}")
-    public Appointment getAppointmentById(@PathVariable Long id) {
-        return appointmentService.getAppointmentById(id);
+    public AppointmentDTO getAppointmentById(@PathVariable Long id) {
+        return appointmentService.convertToDTO(
+                appointmentService.getAppointmentById(id)
+        );
     }
 
     @GetMapping("/doctor/{doctorId}")
-    public List<Appointment> getAppointmentsByDoctor(
+    public List<AppointmentDTO> getAppointmentsByDoctor(
             @PathVariable Long doctorId) {
 
-        return appointmentService.getAppointmentsByDoctor(doctorId);
+        return appointmentService.convertToDTO(
+                appointmentService.getAppointmentsByDoctor(doctorId)
+        );
     }
 
     @GetMapping("/patient/{patientId}")
-    public List<Appointment> getAppointmentsByPatient(
+    public List<AppointmentDTO> getAppointmentsByPatient(
             @PathVariable Long patientId) {
 
-        return appointmentService.getAppointmentsByPatient(patientId);
+        return appointmentService.convertToDTO(
+                appointmentService.getAppointmentsByPatient(patientId)
+        );
     }
 
     @PutMapping("/{id}")
-    public Appointment updateAppointment(
+    public AppointmentDTO updateAppointment(
             @PathVariable Long id,
             @RequestBody Appointment appointment) {
 
-        return appointmentService.updateAppointment(id, appointment);
+        return appointmentService.convertToDTO(
+                appointmentService.updateAppointment(id, appointment)
+        );
     }
 
     @DeleteMapping("/{id}")
