@@ -1,9 +1,8 @@
 package com.CV.Hospital.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -14,8 +13,17 @@ import java.time.LocalDate;
 public class AdmissionDTO {
 
     private Long id;
+
+    @NotNull(message = "Admission date is required")
+    @PastOrPresent(message = "Admission date cannot be in the future")
     private LocalDate admitDate;
+
+    @PastOrPresent(message = "Discharge date cannot be in the future")
     private LocalDate dischargeDate;
+
+    @NotNull(message = "Patient ID is required")
     private Long patientId;
+
+    @NotNull(message = "Room ID is required")
     private Long roomId;
 }
