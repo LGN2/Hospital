@@ -19,6 +19,7 @@ public class AppointmentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public AppointmentDTO addAppointment(
             @Valid @RequestBody AppointmentDTO dto) {
         return appointmentService.addAppointment(dto);
@@ -57,6 +58,7 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
