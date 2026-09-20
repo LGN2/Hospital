@@ -4,6 +4,7 @@ import com.CV.Hospital.dto.AppointmentDTO;
 import com.CV.Hospital.services.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AppointmentDTO addAppointment(
             @Valid @RequestBody AppointmentDTO dto) {
         return appointmentService.addAppointment(dto);
@@ -55,6 +57,7 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
     }
