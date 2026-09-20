@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.HospitalDTO;
 import com.CV.Hospital.entities.Hospital;
 import com.CV.Hospital.services.HospitalService;
 import lombok.RequiredArgsConstructor;
@@ -15,26 +16,34 @@ public class HospitalController {
     private final HospitalService hospitalService;
 
     @PostMapping
-    public Hospital addHospital(@RequestBody Hospital hospital) {
-        return hospitalService.addHospital(hospital);
+    public HospitalDTO addHospital(@RequestBody Hospital hospital) {
+        return hospitalService.convertToDTO(
+                hospitalService.addHospital(hospital)
+        );
     }
 
     @GetMapping
-    public List<Hospital> getAllHospitals() {
-        return hospitalService.getAllHospitals();
+    public List<HospitalDTO> getAllHospitals() {
+        return hospitalService.convertToDTO(
+                hospitalService.getAllHospitals()
+        );
     }
 
     @GetMapping("/{id}")
-    public Hospital getHospitalById(@PathVariable Long id) {
-        return hospitalService.getHospitalById(id);
+    public HospitalDTO getHospitalById(@PathVariable Long id) {
+        return hospitalService.convertToDTO(
+                hospitalService.getHospitalById(id)
+        );
     }
 
     @PutMapping("/{id}")
-    public Hospital updateHospital(
+    public HospitalDTO updateHospital(
             @PathVariable Long id,
             @RequestBody Hospital hospital) {
 
-        return hospitalService.updateHospital(id, hospital);
+        return hospitalService.convertToDTO(
+                hospitalService.updateHospital(id, hospital)
+        );
     }
 
     @DeleteMapping("/{id}")
