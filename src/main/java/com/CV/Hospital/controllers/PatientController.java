@@ -1,5 +1,6 @@
 package com.CV.Hospital.controllers;
 
+import com.CV.Hospital.dto.PatientDTO;
 import com.CV.Hospital.entities.Patient;
 import com.CV.Hospital.services.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -15,36 +16,46 @@ public class PatientController {
     private final PatientService patientService;
 
     @PostMapping
-    public Patient addPatient(
+    public PatientDTO addPatient(
             @RequestBody Patient patient,
             @RequestParam Long hospitalId) {
 
-        return patientService.addPatient(patient, hospitalId);
+        return patientService.convertToDTO(
+                patientService.addPatient(patient, hospitalId)
+        );
     }
 
     @GetMapping
-    public List<Patient> getAllPatients() {
-        return patientService.getAllPatients();
+    public List<PatientDTO> getAllPatients() {
+        return patientService.convertToDTO(
+                patientService.getAllPatients()
+        );
     }
 
     @GetMapping("/{id}")
-    public Patient getPatientById(@PathVariable Long id) {
-        return patientService.getPatientById(id);
+    public PatientDTO getPatientById(@PathVariable Long id) {
+        return patientService.convertToDTO(
+                patientService.getPatientById(id)
+        );
     }
 
     @GetMapping("/hospital/{hospitalId}")
-    public List<Patient> getPatientsByHospital(
+    public List<PatientDTO> getPatientsByHospital(
             @PathVariable Long hospitalId) {
 
-        return patientService.getPatientsByHospital(hospitalId);
+        return patientService.convertToDTO(
+                patientService.getPatientsByHospital(hospitalId)
+        );
     }
 
     @PutMapping("/{id}")
-    public Patient updatePatient(
+    public PatientDTO updatePatient(
             @PathVariable Long id,
             @RequestBody Patient patient) {
 
-        return patientService.updatePatient(id, patient);
+        return patientService.convertToDTO(
+                patientService.updatePatient(id, patient)
+        );
     }
 
     @DeleteMapping("/{id}")
