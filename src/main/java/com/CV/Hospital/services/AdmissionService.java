@@ -1,5 +1,7 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.exceptions.BadRequestException;
+import com.CV.Hospital.exceptions.ResourceNotFoundException;
 import com.CV.Hospital.dto.AdmissionDTO;
 import com.CV.Hospital.entities.Admission;
 import com.CV.Hospital.entities.Patient;
@@ -84,6 +86,11 @@ public class AdmissionService {
             checkRoomCapacity(room);
         }
 
+        if (dto.getDischargeDate() != null
+                && dto.getDischargeDate().isBefore(dto.getAdmitDate())) {
+            throw new BadRequestException("Discharge date cannot be before admission date");
+        }
+
         admission.setPatient(patient);
         admission.setRoom(room);
         admission.setAdmitDate(dto.getAdmitDate());
@@ -99,7 +106,7 @@ public class AdmissionService {
         Admission admission = findActiveAdmission(id);
 
         if (admission.getDischargeDate() != null) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Patient is already discharged"
             );
         }
@@ -127,7 +134,7 @@ public class AdmissionService {
                         .size();
 
         if (currentPatients >= room.getCapacity()) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Room has reached maximum capacity"
             );
         }
@@ -137,21 +144,21 @@ public class AdmissionService {
         return admissionRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Admission not found"));
+                        new ResourceNotFoundException("Admission not found"));
     }
 
     private Patient getPatient(Long id) {
         return patientRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Patient not found"));
+                        new ResourceNotFoundException("Patient not found"));
     }
 
     private Room getRoom(Long id) {
         return roomRepository
                 .findByIdAndIsActiveTrue(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Room not found"));
+                        new ResourceNotFoundException("Room not found"));
     }
 
     public AdmissionDTO convertToDTO(Admission admission) {
