@@ -4,6 +4,7 @@ import com.CV.Hospital.dto.GuardianDTO;
 import com.CV.Hospital.services.GuardianService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class GuardianController {
     private final GuardianService guardianService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public GuardianDTO addGuardian(
             @Valid @RequestBody GuardianDTO dto) {
         return guardianService.addGuardian(dto);
@@ -46,6 +48,7 @@ public class GuardianController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteGuardian(@PathVariable Long id) {
         guardianService.deleteGuardian(id);
     }
