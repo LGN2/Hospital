@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -58,5 +59,19 @@ public class BillController {
     @DeleteMapping("/{id}")
     public void deleteBill(@PathVariable Long id) {
         billService.deleteBill(id);
+    }
+
+    @GetMapping("/outstanding")
+    public List<BillDTO> getOutstandingBills() {
+
+        return billService.getOutstandingBills();
+    }
+
+    @GetMapping("/patient/{patientId}/total")
+    public BigDecimal getTotalBilledAmountForPatient(
+            @PathVariable Long patientId) {
+
+        return billService
+                .getTotalBilledAmountForPatient(patientId);
     }
 }
