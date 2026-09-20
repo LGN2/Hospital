@@ -4,6 +4,7 @@ import com.CV.Hospital.dto.DepartmentDTO;
 import com.CV.Hospital.services.DepartmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public DepartmentDTO addDepartment(
             @Valid @RequestBody DepartmentDTO dto) {
         return departmentService.addDepartment(dto);
@@ -47,6 +49,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartment(@PathVariable Long id) {
         departmentService.deleteDepartment(id);
     }
