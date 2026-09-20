@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -56,5 +57,21 @@ public class AppointmentController {
     @DeleteMapping("/{id}")
     public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
+    }
+    @GetMapping("/doctor/{doctorId}/date/{date}")
+    public List<AppointmentDTO> getDoctorAppointmentsByDate(
+            @PathVariable Long doctorId,
+            @PathVariable LocalDate date) {
+
+        return appointmentService
+                .getDoctorAppointmentsByDate(doctorId, date);
+    }
+
+    @GetMapping("/doctor/{doctorId}/count")
+    public Long getTotalAppointmentsForDoctor(
+            @PathVariable Long doctorId) {
+
+        return appointmentService
+                .getTotalAppointmentsForDoctor(doctorId);
     }
 }
