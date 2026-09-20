@@ -1,5 +1,6 @@
 package com.CV.Hospital.services;
 
+import com.CV.Hospital.dto.DoctorDTO;
 import com.CV.Hospital.entities.Department;
 import com.CV.Hospital.entities.Doctor;
 import com.CV.Hospital.entities.Hospital;
@@ -83,5 +84,31 @@ public class DoctorService {
         Doctor doctor = getDoctorById(id);
         doctor.setIsActive(false);
         doctorRepository.save(doctor);
+    }
+
+    public DoctorDTO convertToDTO(Doctor doctor) {
+        return DoctorDTO.builder()
+                .id(doctor.getId())
+                .name(doctor.getName())
+                .email(doctor.getEmail())
+                .phoneNumber(doctor.getPhoneNumber())
+                .specialization(doctor.getSpecialization())
+                .departmentId(
+                        doctor.getDepartment() != null
+                                ? doctor.getDepartment().getId()
+                                : null
+                )
+                .hospitalId(
+                        doctor.getHospital() != null
+                                ? doctor.getHospital().getId()
+                                : null
+                )
+                .build();
+    }
+
+    public List<DoctorDTO> convertToDTO(List<Doctor> doctors) {
+        return doctors.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }
