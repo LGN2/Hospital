@@ -1,8 +1,8 @@
 package com.CV.Hospital.controllers;
 
 import com.CV.Hospital.dto.GuardianDTO;
-import com.CV.Hospital.entities.Guardian;
 import com.CV.Hospital.services.GuardianService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,45 +17,32 @@ public class GuardianController {
 
     @PostMapping
     public GuardianDTO addGuardian(
-            @RequestBody Guardian guardian,
-            @RequestParam Long patientId) {
-
-        return guardianService.convertToDTO(
-                guardianService.addGuardian(guardian, patientId)
-        );
+            @Valid @RequestBody GuardianDTO dto) {
+        return guardianService.addGuardian(dto);
     }
 
     @GetMapping
     public List<GuardianDTO> getAllGuardians() {
-        return guardianService.convertToDTO(
-                guardianService.getAllGuardians()
-        );
+        return guardianService.getAllGuardians();
     }
 
     @GetMapping("/{id}")
-    public GuardianDTO getGuardianById(@PathVariable Long id) {
-        return guardianService.convertToDTO(
-                guardianService.getGuardianById(id)
-        );
+    public GuardianDTO getGuardianById(
+            @PathVariable Long id) {
+        return guardianService.getGuardianById(id);
     }
 
     @GetMapping("/patient/{patientId}")
     public List<GuardianDTO> getGuardiansByPatient(
             @PathVariable Long patientId) {
-
-        return guardianService.convertToDTO(
-                guardianService.getGuardiansByPatient(patientId)
-        );
+        return guardianService.getGuardiansByPatient(patientId);
     }
 
     @PutMapping("/{id}")
     public GuardianDTO updateGuardian(
             @PathVariable Long id,
-            @RequestBody Guardian guardian) {
-
-        return guardianService.convertToDTO(
-                guardianService.updateGuardian(id, guardian)
-        );
+            @Valid @RequestBody GuardianDTO dto) {
+        return guardianService.updateGuardian(id, dto);
     }
 
     @DeleteMapping("/{id}")
